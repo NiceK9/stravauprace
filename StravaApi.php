@@ -160,14 +160,14 @@ class StravaApi{
 					// $tmpActivity->avgPace = StravaApi::convertSpeedToPace($activities[$i]['average_speed']);
 					if($avgSecondToRun>= $minSeconds && $avgSecondToRun <= $maxSeconds && $activities[$i]['distance'] >= Rules::$MIN_DISTANCE){
 						//$tmpActivity->isValid = true;
-						$isDistX2 = $this->isDatetimeValidInArray(Rules::$DATE_THEWORLD_X2, $activityDate) || (Rules::$IS_FEMALE_X2_DISTANCE && StravaApi::in_array_r($tmpActivity->athleteId, Rules::$FEMALE_IDS));
+						$isDistX2 = $this->isDatetimeValidInArray(Rules::$DATE_THEWORLD_X2, $activityDate) || (Rules::$IS_FEMALE_X2_DISTANCE && StravaApi::in_array_r($activities[$i]['athlete']['id'], Rules::$FEMALE_IDS));
 						if($isDistX2){
 							$clubInfos->totalDistance += $activities[$i]['distance']*2;
-							$tmpActivity->isPowerX2 = true;
+							//$tmpActivity->isPowerX2 = true;
 						}
 						else{
 							$clubInfos->totalDistance += $activities[$i]['distance'];
-							$tmpActivity->isPowerX2 = false;
+							//$tmpActivity->isPowerX2 = false;
 						}
 					}
 					// else
