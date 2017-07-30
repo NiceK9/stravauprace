@@ -61,7 +61,7 @@ class StravaApi{
 		$clubInfos = new Club();
 		$clubInfos->activities = array();
 		$clubInfos->totalDistance = 0;
-		$activities = $this->client->getClubActivities($clubId);
+		$activities = $this->client->getClubActivities($clubId, 1, 200);		
 		$club = $this->client->getClub($clubId);
 		$clubInfos->name = $club["name"];
 		$clubInfos->totalMembers = $club["member_count"];
