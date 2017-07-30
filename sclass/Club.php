@@ -7,6 +7,11 @@ class Club{
 	public $totalMembers;
 	public $activities;
 	public $athletes;
+
+	public $totalActivitiesCounter;
+	
+	public $isSpyExist;
+	public $spyList;
 	
 	public function toHTML()
 	{

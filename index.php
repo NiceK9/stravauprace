@@ -14,6 +14,11 @@ $api = new StravaApi("c56d24c43d4aaa704670521c6e31b09e655a42de"); //access token
 	//////////////////////////////////////////////////////////////////////////////
 	// $club = $api->getClub(294541);
 	// print_r($club);
+	
+	//////////////////////////////// Find Club Members ///////////////////////////
+	//////////////////////////////////////////////////////////////////////////////
+	// $club = $api->getClubMembers(230974);
+	// print_r($club);
 
 	//////////////////////////// Find Athlete's Club /////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////
@@ -40,18 +45,26 @@ $api = new StravaApi("c56d24c43d4aaa704670521c6e31b09e655a42de"); //access token
 	
 	//////////////////////////// Find Club's Activities ///////////////////////////
 	//////////////////////////////////////////////////////////////////////////////
-	// $clubId = 298988; // GST-LienQuan
+	// $clubId = 230974; // VNG-RunClub
 	// $clubInfo =$api->getClubActivitiesWithFilter($clubId, "2017-07-26");
 	// if($clubInfo!=null)
 	// {
 		// echo ("Club " . $clubInfo->name . "<br>");
 		// echo ("Total distance : " . ($clubInfo->totalDistance/1000) . " (km)<br>");
-		// echo ("Total member : " . ($clubInfo->totalMembers) . " members<br>");
+		// echo ("Total members : " . ($clubInfo->totalMembers) . " members<br>");
+		// echo ("Total activities without filter in this time : " . ($clubInfo->totalActivitiesCounter) . " <br>");
+		// if($clubInfo->isSpyExist){
+			// $spyCount = count($clubInfo->spyList);
+			// echo ("Total members (without spy) : " . ($clubInfo->totalMembers - $spyCount) . " members<br>Spy list:<br>");
+			// for($j = 0; $j < $spyCount; $j++)
+				// echo ("&nbsp&nbsp * " . $clubInfo->spyList[$j] . "<br>");
+		// }
 		// $activities = $clubInfo->activities;
 		// $counter = count($activities);
 		// for($i = 0; $i<$counter; $i++)
 		// { 
-			// $content = ("[".$activities[$i]->athleteId . "][" . $activities[$i]->startTime . "] " . $activities[$i]->athleteName . " " . $activities[$i]->type . " " . $activities[$i]->distance . "(km)(bonus: ".$activities[$i]->bonusDistance." km) in " . $activities[$i]->duration . " with pace " . $activities[$i]->avgPace . "<br>");
+			// $bonusDistance = $activities[$i]->bonusDistance>0?("(bonus ".$activities[$i]->bonusDistance." km)") : " ";
+			// $content = ("[".$activities[$i]->athleteId . "][" . $activities[$i]->startTime . "] " . $activities[$i]->athleteName . " " . $activities[$i]->type . " " . $activities[$i]->distance . "(km)" .$bonusDistance." in " . $activities[$i]->duration . " with pace " . $activities[$i]->avgPace . "<br>");
 			// if($activities[$i]->isValid)
 			// {
 				// if($activities[$i]->isPowerX2){
@@ -75,19 +88,26 @@ $api = new StravaApi("c56d24c43d4aaa704670521c6e31b09e655a42de"); //access token
 	
 	///////////////////////////// Find Club's Total distance /////////////////////
 	//////////////////////////////////////////////////////////////////////////////
-	// $clubId = 230974; // VNG Run Club
-	// $clubInfo =$api->getClubTotalDistance($clubId, "2017-07-24 00:00:00", "2017-07-29 00:00:00");
+	// $clubId = 163276; // VNG Run Club
+	// $clubInfo =$api->getClubTotalDistance($clubId, "2017-07-26 00:00:00", "2017-07-31 00:00:00");
 	// if($clubInfo!=null)
 	// {
 		// echo ("Club " . $clubInfo->name . "<br>");
 		// echo ("Total distance : " . ($clubInfo->totalDistance/1000) . " (km)<br>");
-		// echo ("Total member : " . ($clubInfo->totalMembers) . " members<br>");
+		// echo ("Total activities without filter in this time : " . ($clubInfo->totalActivitiesCounter) . " <br>");
+		// echo ("Total members : " . ($clubInfo->totalMembers) . " members<br>");
+		// if($clubInfo->isSpyExist){
+			// $spyCount = count($clubInfo->spyList);
+			// echo ("Total members (without spy) : " . ($clubInfo->totalMembers - $spyCount) . " members<br>Spy list:<br>");
+			// for($j = 0; $j < $spyCount; $j++)
+				// echo ("&nbsp&nbsp * " . $clubInfo->spyList[$j] . "<br>");
+		// }
 		// $activities = $clubInfo->activities;
 		// $counter = count($activities);
 		// for($i = 0; $i<$counter; $i++)
 		// { 
-			// $content = ("[".$activities[$i]->Id . "][" . $activities[$i]->startTime . "] " . $activities[$i]->athleteName . " " . $activities[$i]->type . " " . $activities[$i]->distance . "(km) in " . $activities[$i]->duration . " with pace " . $activities[$i]->avgPace . "<br>");
-			// $content = ("[".$activities[$i]->Id . "][" . $activities[$i]->startTime . "] " . $activities[$i]->athleteName . " " . $activities[$i]->type . " " . $activities[$i]->distance . "(km)(bonus: ".$activities[$i]->bonusDistance." km) in " . $activities[$i]->duration . " with pace " . $activities[$i]->avgPace . "<br>");
+			// $bonusDistance = $activities[$i]->bonusDistance>0?("(bonus ".$activities[$i]->bonusDistance." km)") : " ";
+			// $content = ("[".$activities[$i]->athleteId . "][" . $activities[$i]->startTime . "] " . $activities[$i]->athleteName . " " . $activities[$i]->type . " " . $activities[$i]->distance . "(km)" .$bonusDistance." in " . $activities[$i]->duration . " with pace " . $activities[$i]->avgPace . "<br>");
 			// if($activities[$i]->isValid)
 			// {
 				// $content = "[OK]" . $content;
