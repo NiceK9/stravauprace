@@ -27,6 +27,7 @@ echo ("<html><body>");
             'code' => $_GET['code']
         ));
         
+		echo ("Access Token " .  $token . "<br>");
 		$api = new StravaApi($token);
 		//////////////////////////// Find Athlete's Club /////////////////////////////
 		$clubs =$api->getAthleteClubs();
