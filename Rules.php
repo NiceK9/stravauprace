@@ -7,6 +7,7 @@ class Rules{
 	public static $DATE_THEWORLD_X2 = array("2017-08-13", "2017-08-20");
 	public static $IS_FEMALE_X2_DISTANCE = true;
 	public static $FEMALE_IDS = array("23170539", "19434325");
+	public static $SPY_IDS = array("13580475"); // Id of spy KhanhNguyen for now
 	
 }
 ?>

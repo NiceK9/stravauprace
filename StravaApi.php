@@ -51,6 +51,11 @@ class StravaApi{
 		return $this->client->getClub($clubId);
 	}
 	
+	public function getClubMembers($clubId)
+	{
+		return $this->client->getClubMembers($clubId);
+	}
+	
 	public function getClubRawActivities($clubId)
 	{
 		return $this->client->getClubActivities($clubId);
@@ -65,7 +70,10 @@ class StravaApi{
 		$club = $this->client->getClub($clubId);
 		$clubInfos->name = $club["name"];
 		$clubInfos->totalMembers = $club["member_count"];
+		$clubInfos->isSpyExist = false;
+		$clubInfos->spyList = array();
 		$counter = count($activities);
+		$clubInfos->totalActivitiesCounter  = $counter;
 		if($counter>0)
 		{
 			$inputDate = DateTime::createFromFormat(TIME_INPUT_FORMAT, $onDateStr);
@@ -74,8 +82,23 @@ class StravaApi{
 			$minSeconds = ($minPaceArrs[0]*60 + (count($minPaceArrs)>1?$minPaceArrs[1]:0));
 			$maxSeconds = ($maxPaceArrs[0]*60 + (count($maxPaceArrs)>1?$maxPaceArrs[1]:0));
 			$idx = 0;
+			$spyCounter = 0;
 			for($i = 0; $i < $counter; $i++)
 			{
+				if(StravaApi::in_array_r($activities[$i]['athlete']['id'], Rules::$SPY_IDS))
+				{
+					$athleteName = $activities[$i]['athlete']['firstname'] . " " . $activities[$i]['athlete']['lastname'];
+					if(!$clubInfos->isSpyExist){
+						$clubInfos->isSpyExist = true;
+						$clubInfos->spyList[$spyCounter++] = $athleteName;
+					}
+					else {
+						
+						if(!StravaApi::in_array_r($athleteName, $clubInfos->spyList))
+							$clubInfos->spyList[$spyCounter++] = $athleteName;
+					}
+					continue;
+				}
 				$strDate = $activities[$i]['start_date_local'];
 				$strDate = str_replace("T", " ", $strDate);
 				$strDate = str_replace("Z", "", $strDate);
@@ -124,12 +147,15 @@ class StravaApi{
 		$clubInfos = new Club();
 		$clubInfos->totalDistance = 0;
 		// Debug detail
-		//$clubInfos->activities = array();
-		$activities = $this->client->getClubActivities($clubId);
+		$clubInfos->activities = array();
+		$activities = $this->client->getClubActivities($clubId, 1, 200);
 		$club = $this->client->getClub($clubId);
 		$clubInfos->name = $club["name"];
 		$clubInfos->totalMembers = $club["member_count"];
+		$clubInfos->isSpyExist = false;
+		$clubInfos->spyList = array();
 		$counter = count($activities);
+		$clubInfos->totalActivitiesCounter  = $counter;
 		if($counter>0)
 		{
 			$inputDateFrom = DateTime::createFromFormat(TIME_FORMAT, $fromDate);
@@ -139,8 +165,23 @@ class StravaApi{
 			$minSeconds = ($minPaceArrs[0]*60 + (count($minPaceArrs)>1?$minPaceArrs[1]:0));
 			$maxSeconds = ($maxPaceArrs[0]*60 + (count($maxPaceArrs)>1?$maxPaceArrs[1]:0));
 			$idx = 0;
+			$spyCounter = 0;
 			for($i = 0; $i < $counter; $i++)
 			{
+				if(StravaApi::in_array_r($activities[$i]['athlete']['id'], Rules::$SPY_IDS))
+				{
+					$athleteName = $activities[$i]['athlete']['firstname'] . " " . $activities[$i]['athlete']['lastname'];
+					if(!$clubInfos->isSpyExist){
+						$clubInfos->isSpyExist = true;
+						$clubInfos->spyList[$spyCounter++] = $athleteName;
+					}
+					else {
+						
+						if(!StravaApi::in_array_r($athleteName, $clubInfos->spyList))
+							$clubInfos->spyList[$spyCounter++] = $athleteName;
+					}
+					continue;
+				}
 				$strDate = $activities[$i]['start_date_local'];
 				$strDate = str_replace("T", " ", $strDate);
 				$strDate = str_replace("Z", "", $strDate);
@@ -159,20 +200,20 @@ class StravaApi{
 					// $tmpActivity->startTime = $strDate;
 					// $tmpActivity->avgPace = StravaApi::convertSpeedToPace($activities[$i]['average_speed']);
 					if($avgSecondToRun>= $minSeconds && $avgSecondToRun <= $maxSeconds && $activities[$i]['distance'] >= Rules::$MIN_DISTANCE){
-						//$tmpActivity->isValid = true;
+						// $tmpActivity->isValid = true;
 						$isDistX2 = $this->isDatetimeValidInArray(Rules::$DATE_THEWORLD_X2, $activityDate) || (Rules::$IS_FEMALE_X2_DISTANCE && StravaApi::in_array_r($activities[$i]['athlete']['id'], Rules::$FEMALE_IDS));
 						if($isDistX2){
 							$clubInfos->totalDistance += $activities[$i]['distance']*2;
-							//$tmpActivity->isPowerX2 = true;
+							// $tmpActivity->isPowerX2 = true;
 						}
 						else{
 							$clubInfos->totalDistance += $activities[$i]['distance'];
-							//$tmpActivity->isPowerX2 = false;
+							// $tmpActivity->isPowerX2 = false;
 						}
 					}
 					// else
 						// $tmpActivity->isValid = false;
-					//$clubInfos->activities[$idx++] = $tmpActivity;
+					// $clubInfos->activities[$idx++] = $tmpActivity;
 				 }
 			}				
 		}
@@ -203,6 +244,8 @@ class StravaApi{
 	//////////////////////////
 	public static function speed_SecondsPerKm($speed)
 	{
+		if($speed == 0)
+			return 0;
 		return floor(1000 / $speed);
 	}
 	public static function secondToStr($seconds)

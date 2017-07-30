@@ -6,6 +6,10 @@ class Club{
 	public $totalDistance;
 	public $totalMembers;
 	public $activities;
+	public $totalActivitiesCounter;
+	
+	public $isSpyExist;
+	public $spyList;
 	
 	public function toHTML()
 	{
