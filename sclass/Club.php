@@ -6,6 +6,7 @@ class Club{
 	public $totalDistance;
 	public $totalMembers;
 	public $activities;
+	public $athletes;
 	
 	public function toHTML()
 	{
