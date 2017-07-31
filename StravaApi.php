@@ -159,6 +159,7 @@ class StravaApi{
 		$athletes = array_merge ( $athletes, $this->client->getClubMembers($clubId, 3, 200));
 		
 		$club = $this->client->getClub($clubId);
+		$clubInfos->id = $club["id"];
 		$clubInfos->name = $club["name"];
 		$clubInfos->totalMembers = $club["member_count"];
 		
@@ -228,11 +229,13 @@ class StravaApi{
 						if($isDistX2){
 							$clubInfos->totalDistance += $activities[$i]['distance']*2;
 							$clubInfos->athletes[$activities[$i]['athlete']['id']]["distance"] += ($activities[$i]['distance']*2)/1000;
+							$clubInfos->athletes[$activities[$i]['athlete']['id']]["sex"] = "F";
 							$tmpActivity->isPowerX2 = true;
 						}
 						else{
 							$clubInfos->totalDistance += $activities[$i]['distance'];
 							$clubInfos->athletes[$activities[$i]['athlete']['id']]["distance"] += $activities[$i]['distance']/1000;
+							$clubInfos->athletes[$activities[$i]['athlete']['id']]["sex"] = "M";
 							$tmpActivity->isPowerX2 = false;
 						}
 					}

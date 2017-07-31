@@ -1,9 +1,11 @@
 <?php
 // error_reporting(0);
 // ini_set("display_errors", 0);
+ini_set('max_execution_time', 300); //300 seconds = 5 minutes
 
 include_once('StravaApi.php');
-$api = new StravaApi("c56d24c43d4aaa704670521c6e31b09e655a42de"); //access token of buhu
+// $api = new StravaApi("c56d24c43d4aaa704670521c6e31b09e655a42de"); //access token of buhu
+$api = new StravaApi("fd76e56b9f860e40486315f4043298a266968a52"); //access token of Nice
 
 	//////////////////////////// Find Athlete ////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////
@@ -141,12 +143,14 @@ $api = new StravaApi("c56d24c43d4aaa704670521c6e31b09e655a42de"); //access token
 	//Display UI all score
 	$clubIds = array(
 	298988 //LienQuan GST
-	,296230 //Run2Dead
+	// ,296230 //Run2Dead
+	,298756 //Run2Dead
+	,288686 //Gia Dinh
 	// 230974 // VNG Run Club
 	// ,163276 // SRC
 	// ,193097 // YCB
 	);
-	$clubs = $api->reportMultiClubsWithSort($clubIds, "2017-07-28 00:00:00", "2017-07-31 00:00:00");
+	$clubs = $api->reportMultiClubsWithSort($clubIds, "2017-07-30 00:00:00", "2017-07-30 23:59:59");
 	$counter = count($clubs);
 	
 	//debug info
@@ -175,15 +179,20 @@ $api = new StravaApi("c56d24c43d4aaa704670521c6e31b09e655a42de"); //access token
 					// echo "<div style ='color:#ff0000'> $content </div>"; 
 				}
 			}
-			
+
 			$athletes = $clubInfo->athletes;
 			foreach ($athletes as &$athlete)
 			{ 
 				$content = ("[".$athlete["id"] . "] " . $athlete["name"]. " run " . $athlete["distance"] . "(km)<br>");
 				// echo $content;
-			}
+			}		
+			
+
 		}
 	}
+	$file = 'data_cache/day_1.txt';
+	$current = json_encode($clubs);
+	file_put_contents($file, $current);
 ?>
 
 <!DOCTYPE html>
