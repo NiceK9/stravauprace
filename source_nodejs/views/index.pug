@@ -1,0 +1,91 @@
+extends ../node_modules/pug-bootstrap/_bootstrap
+
+append styles
+	+bootswatch("flatly")
+	link(href='../css/theme.css', rel='stylesheet')
+block body
+	nav.navbar.navbar-default.navbar-fixed-top
+		.container
+			.navbar-header
+				button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar', aria-expanded='false', aria-controls='navbar')
+					span.sr-only Toggle navigation
+					span.icon-bar
+					span.icon-bar
+					span.icon-bar
+				a.navbar-brand(href='/') VNG Uprace
+			#navbar.navbar-collapse.collapse
+				ul.nav.navbar-nav
+					li.active
+						a(href='/') Bảng xếp hạng
+					li
+						a(href='/authorize') Đăng ký
+					li
+						a(href='/about') Giới thiệu
+					li
+						a(href='/contact') Liên hệ
+	.container.theme-showcase(role='main')
+		.page-header
+			h2 Bảng xếp hạng
+		.panel-group
+			.panel(class="panel-primary")
+				table.table(class="btn-primary")
+					thead
+						th.col-md Rank
+						th.col-md
+						th.col-md-5 Tên đội
+						th.col-md-3.text-right Tổng thành tích (km)
+						th.col-md-3.text-right Tổng thời gian
+		.panel-group(id="accordionleaderboard", role="tablist", aria-multiselectable="true")
+			for team in data
+				-var type = (team.isTop) ? "success" : "primary";
+				.panel(class="panel-" + type, data-toggle="collapse", href="#collapse" + team.id, aria-expanded="true")
+					-var type = (team.isTop) ? "success" : "none";
+					table.table(class="btn-" + type, role="tab", id="heading" + team.id)
+						thead
+							th.col-md.text-center
+								div= "#" + team.rank
+							th.col-md
+								a(href=team.url)
+									img.img-rounded.center-block(src=team.profile, alt=team.profile, width=20, height=20)
+							th.col-md-5
+								div= team.name
+							th.col-md-3.text-right
+								div= team.totalDistanceText
+							th.col-md-3.text-right
+								div= team.totalTimeText
+					.panel-collapse.collapse(id="collapse" + team.id, role="tabpanel", aria-labelledby="heading" + team.id)
+						.panel-body
+							table.table.table-responsive(class="table-condensed")
+								thead
+									th.col-md.text-center Rank
+									th.col-md
+									th.col-md-2 Runner
+									th.col-md-1.text-center Giới tính
+									th.col-md-2.text-right Thành tích (km)
+									th.col-md-2.text-right Thời gian
+									th.col-md-2.text-right Pace avg. (phút/km)
+									th.col-md-2.text-right Pace max. (phút/km)
+								tbody
+									for member in team.members
+										-var type = (member.isTop) ? "info" : "none";
+										tr(class="panel-" + type)
+											td.col-md.text-center
+												div= member.rank
+											td.col-md
+												img.img-rounded.center-block(src=member.profile_medium, alt=member.fullname, width=20, height=20)
+											td.col-md-2
+												div= member.fullName
+											td.col-md-1.text-center
+												div= member.gender
+											td.col-md-2.text-right
+												div= member.totalDistanceText
+											td.col-md-2.text-right
+												div= member.totalTimeText
+											td.col-md-2.text-right
+												div= member.paceAverage.text
+											td.col-md-2.text-right
+												div= member.paceMax.text
+	nav.navbar.fixed-bottom
+		.container
+			p.text-center Copyright 2017 by Nam Nguyễn
+			p.text-center Powered by VNG
