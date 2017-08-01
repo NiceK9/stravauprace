@@ -155,8 +155,6 @@ class StravaApi{
 		$clubInfos->activities = array();
 		$activities = $this->client->getClubActivities($clubId, 1, 200);		
 		$athletes =	$this->client->getClubMembers($clubId, 1, 200);
-		$athletes = array_merge ( $athletes, $this->client->getClubMembers($clubId, 2, 200));
-		$athletes = array_merge ( $athletes, $this->client->getClubMembers($clubId, 3, 200));
 		
 		$club = $this->client->getClub($clubId);
 		$clubInfos->id = $club["id"];
@@ -168,6 +166,7 @@ class StravaApi{
 		{
 			$athletes[$i]["name"] = $athletes[$i]['firstname'] . " " . $athletes[$i]['lastname'];
 			$athletes[$i]["distance"] = 0;
+			$athletes[$i]["isspy"] = StravaApi::in_array_r($athletes[$i]['id'], Rules::$SPY_IDS);
 			$clubInfos->athletes[$athletes[$i]["id"]] = $athletes[$i];
 		}
 
@@ -262,6 +261,17 @@ class StravaApi{
 		usort($clubs, array("StravaApi", "uCompare"));
 		return $clubs;
 	}	
+	
+	static function makeTotalRanking($clubs)
+	{
+		$totalAthletes = array();
+		foreach ($clubs as &$club)
+		{ 		
+			$totalAthletes = array_merge($totalAthletes, $club->athletes);
+		}
+		usort($totalAthletes, array("StravaApi", "distCompare"));
+		return $totalAthletes;
+	}
 	
 	static function distCompare($athleteA, $athleteB)
 	{

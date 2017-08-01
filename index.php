@@ -5,7 +5,9 @@ ini_set('max_execution_time', 300); //300 seconds = 5 minutes
 
 include_once('StravaApi.php');
 // $api = new StravaApi("c56d24c43d4aaa704670521c6e31b09e655a42de"); //access token of buhu
-$api = new StravaApi("fd76e56b9f860e40486315f4043298a266968a52"); //access token of Nice
+// $api = new StravaApi("fd76e56b9f860e40486315f4043298a266968a52"); //access token of Nice
+//$api = new StravaApi("c138b46d4d1d1d27d0df268499ef0a3dbedfeb0e"); //access token of BTC UpRace HCM
+$api = new StravaApi("aab65002d2b37ec719b3f7191fb77599183b6f88"); //access token of BTC UpRace HN
 
 	//////////////////////////// Find Athlete ////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////
@@ -139,19 +141,41 @@ $api = new StravaApi("fd76e56b9f860e40486315f4043298a266968a52"); //access token
 		// echo ("Total member : " . ($clubs[$i]->totalMembers) . " members<br>");
 		// echo (" ****************************************************** <br>");
 	// }
-
 	//Display UI all score
 	$clubIds = array(
-	298988 //LienQuan GST
+	// 298988 //LienQuan GST
 	// ,296230 //Run2Dead
-	,298756 //Run2Dead
-	,288686 //Gia Dinh
+	// ,298756 //Run2Dead
+	// ,288686 //Gia Dinh
 	// 230974 // VNG Run Club
 	// ,163276 // SRC
 	// ,193097 // YCB
+	
+	// group of HCM
+	// 295557,
+	// 295587,
+	// 297405,
+	// 297386,
+	// 299848,
+	// 299859,
+	// 300344,
+	// 299571,
+	// 301338
+	
+	//group of HN
+	300411,
+	301318,
+	300383,
+    301102,
+	299004,
+	301591
+	
+
 	);
-	$clubs = $api->reportMultiClubsWithSort($clubIds, "2017-07-30 00:00:00", "2017-07-30 23:59:59");
+	$clubs = $api->reportMultiClubsWithSort($clubIds, "2017-07-20 00:00:00", "2017-08-1 23:59:59");
 	$counter = count($clubs);
+	
+	$totalAthletes = array();
 	
 	//debug info
 	for($n = 0; $n < $counter; $n++)
@@ -190,9 +214,13 @@ $api = new StravaApi("fd76e56b9f860e40486315f4043298a266968a52"); //access token
 
 		}
 	}
+	
+	$totalAthletes = $api->makeTotalRanking($clubs);
+	
 	$file = 'data_cache/day_1.txt';
 	$current = json_encode($clubs);
 	file_put_contents($file, $current);
+	file_put_contents("data_cache/total_ranking.txt", json_encode($totalAthletes));
 ?>
 
 <!DOCTYPE html>
@@ -290,7 +318,9 @@ $api = new StravaApi("fd76e56b9f860e40486315f4043298a266968a52"); //access token
 				<?php
 					$athletes = $clubInfo->athletes;
 					foreach ($athletes as &$athlete)
-					{ 					
+					{ 		
+						if($athlete["isspy"]==0)
+						{
 				?>
                     <tr class="active">
                         <td>
@@ -304,6 +334,7 @@ $api = new StravaApi("fd76e56b9f860e40486315f4043298a266968a52"); //access token
                         </td>
                     </tr>  
 				<?php
+						}
 					}
 				?>					
                 </tbody>
