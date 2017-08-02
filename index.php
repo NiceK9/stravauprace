@@ -8,7 +8,7 @@ include_once('StravaApi.php');
 // $api = new StravaApi("fd76e56b9f860e40486315f4043298a266968a52"); //access token of Nice
 //$api = new StravaApi("c138b46d4d1d1d27d0df268499ef0a3dbedfeb0e"); //access token of BTC UpRace HCM
 $api = new StravaApi("aab65002d2b37ec719b3f7191fb77599183b6f88"); //access token of BTC UpRace HN
-
+$ID_ATHLETES= array(21136582, 19831899, 23825934, 23624350, 22984655, 23805282, 19876772, 23827207, 20063232, 23829200, 23857257, 23857308, 21688543, 23529667, 23527635, 23730022, 23852933, 23881946, 23373165, 23851128, 23852899, 23373028, 23322053, 23826062, 23615449, 23321461, 23349397, 23322575, 23496911, 23469839, 23378008, 23546196, 23549775, 23482771, 23547014, 23474169, 11260208, 18962242, 23707099, 19797324, 23474671, 23120493, 20617195, 23876283, 23530632, 23650513, 23546172, 23878118, 23546176, 23546140, 23615267, 23882206, 23882581, 23882480, 23883306, 23726555, 23726649, 23726646, 23881671, 23726657, 23878942, 23795585, 23220402, 23806230, 23592562, 23528702, 23546065, 23880455, 23392990, 23880528, 23570019, 23864130, 23570043, 23615280, 23570030, 23877393, 23825104, 23877407, 23570741, 23876865, 23726618, 23880933, 23674768, 23647923, 23674413, 23878008, 23879668, 23880097, 23878214, 23880604, 23412410, 23862917, 23825005, 23575671, 23864629, 23615315, 23475425, 23728767, 23169104, 23170818, 23879480, 23878385, 23879881, 18521258, 23877780, 23049368, 23679889, 23652577, 23878423, 23481470, 23701299, 23298095, 23650392, 23649210, 23651624, 23471656, 23625565, 23572746, 23174241);
 	//////////////////////////// Find Athlete ////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////
 	// $athlete =$api->getCurrentAthlete("16397134");
@@ -26,21 +26,33 @@ $api = new StravaApi("aab65002d2b37ec719b3f7191fb77599183b6f88"); //access token
 
 	//////////////////////////// Find Athlete's Club /////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////
-	// $clubs =$api->getAthleteClubs();
-	// if($clubs!=null)
-	// {
-		// $clubSize = count($clubs);
-		// if($clubSize>0)
-		// {
-			// for($i = 0; $i< $clubSize; $i++)
-				// echo("[Club][". $clubs[$i]["id"]."] " . $clubs[$i]["name"] . "<br>");
-		// } else {
-			// print('No clubs found!');
-		// }
-	// } else {
-		// print('No Athlete found!');
-	// }
-
+	$clubs =$api->getAthleteClubs();
+	if($clubs!=null)
+	{
+		$clubSize = count($clubs);
+		if($clubSize>0)
+		{
+			for($i = 0; $i< $clubSize; $i++)
+			{				
+				echo("<br>[Club][". $clubs[$i]["id"]."] " . $clubs[$i]["name"] . "<br>");
+				$athletes =	$api->client->getClubMembers($clubs[$i]["id"], 1, 200);
+				echo("Member count: ". count($athletes) . "<br>");
+				for($j = 0; $j < count($athletes); $j++)
+				{
+					if(in_array((int)$athletes[$j]["id"], $ID_ATHLETES))
+						echo("[VALID]".$athletes[$j]["id"]."</br>");
+					else
+						echo("[INVALID]".$athletes[$j]["id"]."</br>");
+				}
+				echo("<br>");
+			}
+		} else {
+			print('No clubs found!');
+		}
+	} else {
+		print('No Athlete found!');
+	}
+	exit();
 	//////////////////////////// Find Raw Club's Activities////////////////////
 	//////////////////////////////////////////////////////////////////////////////
 	// $club = $api->getClubRawActivities(298988);
@@ -184,7 +196,8 @@ $api = new StravaApi("aab65002d2b37ec719b3f7191fb77599183b6f88"); //access token
 	);
 	$prefixTable = "A";
 	
-	$clubs = $api->reportMultiClubsWithSort($clubIds, "2017-08-1 00:00:00", "2017-08-2 23:59:59");
+	$file = 'data_cache/'.$prefixTable.'_day_1.txt';
+	$clubs = $api->reportMultiClubsWithSort($clubIds, "2017-08-1 00:00:00", "2017-08-2 23:59:59", $file);
 	$counter = count($clubs);
 	
 	
@@ -225,12 +238,6 @@ $api = new StravaApi("aab65002d2b37ec719b3f7191fb77599183b6f88"); //access token
 
 		}
 	}
-	
-	// $totalAthletes = $api->makeTotalRanking($clubs);
-	
-	$file = 'data_cache/'.$prefixTable.'_day_1.txt';
-	$current = json_encode($clubs);
-	file_put_contents($file, $current);
 		
 	$totalAthletes = array();
 	for($d = 1; $d <= 12; $d++)

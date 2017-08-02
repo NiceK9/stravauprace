@@ -250,7 +250,7 @@ class StravaApi{
 		return $clubInfos;
 	}
 	
-	public function reportMultiClubsWithSort($clubIds, $fromDate, $toDate)
+	public function reportMultiClubsWithSort($clubIds, $fromDate, $toDate, $filename)
 	{
 		$clubs = array();
 		$counter = count($clubIds);
@@ -259,6 +259,10 @@ class StravaApi{
 			$clubs[$i] = $this->getClubTotalDistance($clubIds[$i], $fromDate, $toDate);
 		}
 		usort($clubs, array("StravaApi", "uCompare"));
+				
+		$current = json_encode($clubs);
+		file_put_contents($filename, $current);
+	
 		return $clubs;
 	}	
 	
