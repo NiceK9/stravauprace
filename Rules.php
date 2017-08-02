@@ -1,7 +1,7 @@
 <?php
 class Rules{
 	
-	public static $MIN_PACE = "4:30";
+	public static $MIN_PACE = "5:00";
 	public static $MAX_PACE = "10:00";
 	public static $MIN_DISTANCE = 1000; // m
 	public static $DATE_THEWORLD_X2 = array("2017-08-13", "2017-08-20");
