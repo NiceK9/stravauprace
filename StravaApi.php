@@ -226,13 +226,13 @@ class StravaApi{
 						$tmpActivity->isValid = true;
 						$isDistX2 = $this->isDatetimeValidInArray(Rules::$DATE_THEWORLD_X2, $activityDate) || (Rules::$IS_FEMALE_X2_DISTANCE && StravaApi::in_array_r($activities[$i]['athlete']['id'], Rules::$FEMALE_IDS));
 						if($isDistX2){
-							$clubInfos->totalDistance += $activities[$i]['distance']*2;
+							$clubInfos->totalDistance += $activities[$i]['distance']*2/1000;
 							$clubInfos->athletes[$activities[$i]['athlete']['id']]["distance"] += ($activities[$i]['distance']*2)/1000;
 							$clubInfos->athletes[$activities[$i]['athlete']['id']]["sex"] = "F";
 							$tmpActivity->isPowerX2 = true;
 						}
 						else{
-							$clubInfos->totalDistance += $activities[$i]['distance'];
+							$clubInfos->totalDistance += $activities[$i]['distance']/1000;
 							$clubInfos->athletes[$activities[$i]['athlete']['id']]["distance"] += $activities[$i]['distance']/1000;
 							$clubInfos->athletes[$activities[$i]['athlete']['id']]["sex"] = "M";
 							$tmpActivity->isPowerX2 = false;
@@ -278,6 +278,13 @@ class StravaApi{
 		if($athleteA["distance"] == $athleteB["distance"])
 			return 0;
 		return ($athleteA["distance"] > $athleteB["distance"] ? -1 : 1);
+	}
+	
+	static function distCompareObject($athleteA, $athleteB)
+	{
+		if($athleteA->distance == $athleteB->distance)
+			return 0;
+		return ($athleteA->distance > $athleteB->distance ? -1 : 1);
 	}
 	
 	static function uCompare($clubA, $clubB)

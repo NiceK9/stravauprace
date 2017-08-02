@@ -40,7 +40,7 @@ $api = new StravaApi("aab65002d2b37ec719b3f7191fb77599183b6f88"); //access token
 	// } else {
 		// print('No Athlete found!');
 	// }
-		
+
 	//////////////////////////// Find Raw Club's Activities////////////////////
 	//////////////////////////////////////////////////////////////////////////////
 	// $club = $api->getClubRawActivities(298988);
@@ -163,19 +163,30 @@ $api = new StravaApi("aab65002d2b37ec719b3f7191fb77599183b6f88"); //access token
 	// 301338
 	
 	//group of HN
-	300411,
-	301318,
-	300383,
-    301102,
-	299004,
-	301591
+	300411, //Start HN
+	301318, //Fast And Furious 9
+	300383, //Biệt đội "."
+    299042, //SunMoon
+	301102, //Ban "Cờ - him"
+	299004, //Team Rồng
+	301591, //Tia chớp
+	301264, //ÂM THỊNH
+	300407, //Đôi cánh thiên thần 
+	300091, //Lộn cái bàn
+	300410, //GSN.Young
+	300382, //ZSL - Super girl
+	301784, //Meow Meow
+	301778, //Kiểu gì cũng về đích
+	300385, //Pikachu
+	301533, //Chạy everywhere
+	301815, //Lết
 	
-
 	);
-	$clubs = $api->reportMultiClubsWithSort($clubIds, "2017-07-20 00:00:00", "2017-08-1 23:59:59");
+	$prefixTable = "A";
+	
+	$clubs = $api->reportMultiClubsWithSort($clubIds, "2017-08-1 00:00:00", "2017-08-2 23:59:59");
 	$counter = count($clubs);
 	
-	$totalAthletes = array();
 	
 	//debug info
 	for($n = 0; $n < $counter; $n++)
@@ -215,11 +226,42 @@ $api = new StravaApi("aab65002d2b37ec719b3f7191fb77599183b6f88"); //access token
 		}
 	}
 	
-	$totalAthletes = $api->makeTotalRanking($clubs);
+	// $totalAthletes = $api->makeTotalRanking($clubs);
 	
-	$file = 'data_cache/day_1.txt';
+	$file = 'data_cache/'.$prefixTable.'_day_1.txt';
 	$current = json_encode($clubs);
 	file_put_contents($file, $current);
+		
+	$totalAthletes = array();
+	for($d = 1; $d <= 12; $d++)
+	{
+		$filename = 'data_cache/'.$prefixTable."_day_".$d.".txt";
+		if (file_exists($filename)) 
+		{
+			$records = json_decode(file_get_contents($filename));
+			foreach ($records as &$record)
+			{
+				foreach ($record->athletes as &$athlete)
+				{
+					$added = false	;		
+					foreach ($totalAthletes as &$athleteInTable)
+					{ 
+						if ($athlete->id == $athleteInTable->id) {
+							$athleteInTable->distance += $athlete->distance;
+							$added = true;
+							break;
+						}
+					}
+					
+					if($added == false)
+						array_push($totalAthletes, $athlete);
+				}
+			}
+		}
+	}
+	
+	usort($totalAthletes, array("StravaApi", "distCompareObject"));
+	// print_r(json_encode($totalAthletes));
 	file_put_contents("data_cache/total_ranking.txt", json_encode($totalAthletes));
 ?>
 
@@ -282,8 +324,8 @@ $api = new StravaApi("aab65002d2b37ec719b3f7191fb77599183b6f88"); //access token
       <ul class="nav navbar-nav">
         <li class="one"><a><?php echo($n + 1);?></a></li>
         <li class="two"><a><?php echo ($clubInfo->name);?></a></li>
-        <li class="three"><a><?php echo ($clubInfo->totalDistance/1000);?></a></li>
-        <li class="four"><a><?php echo ($clubInfo->totalDistance/1000);?></a></li>
+        <li class="three"><a><?php echo ($clubInfo->totalDistance);?></a></li>
+        <li class="four"><a><?php echo ($clubInfo->totalDistance);?></a></li>
       </ul>
     </div>
   </nav>
