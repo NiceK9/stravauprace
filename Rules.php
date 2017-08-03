@@ -3,8 +3,8 @@ class Rules{
 	
 	public static $MIN_PACE = "5:00";
 	public static $MAX_PACE = "10:00";
-	public static $MIN_DISTANCE = 1000; // m
-	public static $DATE_THEWORLD_X2 = array("2017-08-13", "2017-08-20");
+	public static $MIN_DISTANCE = 0; // m //1000m for HCM
+	public static $DATE_THEWORLD_X2 = array("2017-08-6", "2017-08-13", "2017-08-20");
 	public static $IS_FEMALE_X2_DISTANCE = true;
 	public static $FEMALE_IDS = array(
 "23825934",

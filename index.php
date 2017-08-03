@@ -235,7 +235,6 @@ $ID_ATHLETES= array(21136582, 19831899, 23825934, 23624350, 22984655, 23805282, 
 	$clubs = $api->reportMultiClubsWithSort($clubIdsHN_B, "2017-08-3 00:00:00", "2017-08-3 23:59:59", $file);
 	$counter = count($clubs);
 	
-	
 	//debug info
 	for($n = 0; $n < $counter; $n++)
 	{
@@ -255,11 +254,11 @@ $ID_ATHLETES= array(21136582, 19831899, 23825934, 23624350, 22984655, 23805282, 
 				if($activities[$i]->isValid)
 				{
 					$content = "[OK]" . $content;
-					// echo $content;
+					echo $content;
 				}
 				else{
 					$content = "[INVALID]" . $content;
-					// echo "<div style ='color:#ff0000'> $content </div>"; 
+					echo "<div style ='color:#ff0000'> $content </div>"; 
 				}
 			}
 
@@ -267,7 +266,7 @@ $ID_ATHLETES= array(21136582, 19831899, 23825934, 23624350, 22984655, 23805282, 
 			foreach ($athletes as &$athlete)
 			{ 
 				$content = ("[".$athlete["id"] . "] " . $athlete["name"]. " run " . $athlete["distance"] . "(km)<br>");
-				// echo $content;
+				echo $content;
 			}		
 			
 

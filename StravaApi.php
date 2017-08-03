@@ -10,6 +10,7 @@ use Strava\API\Client;
 use Strava\API\Exception;
 use Strava\API\Service\REST;
 
+define ("TIME_ZONE", 'Asia/Ho_Chi_Minh');
 define ("TIME_FORMAT", 'Y-m-d H:i:s');
 define ("TIME_INPUT_FORMAT", 'Y-m-d');
 
@@ -66,7 +67,7 @@ class StravaApi{
 		$clubInfos = new Club();
 		$clubInfos->activities = array();
 		$clubInfos->totalDistance = 0;
-		$activities = $this->client->getClubActivities($clubId, 1, 200);		
+		$activities = $this->client->getClubActivities($clubId, 1, 200);	
 		$club = $this->client->getClub($clubId);
 		$clubInfos->name = $club["name"];
 		$clubInfos->totalMembers = $club["member_count"];
@@ -177,14 +178,15 @@ class StravaApi{
 		$clubInfos->totalActivitiesCounter  = $counter;
 		if($counter>0)
 		{
-			$inputDateFrom = DateTime::createFromFormat(TIME_FORMAT, $fromDate);
-			$inputDateTo = DateTime::createFromFormat(TIME_FORMAT, $toDate);
+			$inputDateFrom = DateTime::createFromFormat(TIME_FORMAT, $fromDate, new DateTimeZone(TIME_ZONE));
+			$inputDateTo = DateTime::createFromFormat(TIME_FORMAT, $toDate, new DateTimeZone(TIME_ZONE));
 			$minPaceArrs = explode(":", Rules::$MIN_PACE);
 			$maxPaceArrs = explode(":", Rules::$MAX_PACE);
 			$minSeconds = ($minPaceArrs[0]*60 + (count($minPaceArrs)>1?$minPaceArrs[1]:0));
 			$maxSeconds = ($maxPaceArrs[0]*60 + (count($maxPaceArrs)>1?$maxPaceArrs[1]:0));
 			$idx = 0;
 			$spyCounter = 0;
+			echo ("count act: ".$counter."</br>");
 			for($i = 0; $i < $counter; $i++)
 			{
 				if(StravaApi::in_array_r($activities[$i]['athlete']['id'], Rules::$SPY_IDS))
@@ -199,6 +201,7 @@ class StravaApi{
 						if(!StravaApi::in_array_r($athleteName, $clubInfos->spyList))
 							$clubInfos->spyList[$spyCounter++] = $athleteName;
 					}
+					echo ($i." skip</br>");
 					continue;
 				}
 				
@@ -208,7 +211,13 @@ class StravaApi{
 				$strDate = str_replace("Z", "", $strDate);
 				$activityDate = DateTime::createFromFormat(TIME_FORMAT, $strDate);
 				$activityDate->setTimezone(new DateTimeZone('Asia/Ho_Chi_Minh')); //convert GMT +7
-				$strDate = $activityDate->format('Y-m-d H:i:s');
+				$strDate = $activityDate->format(TIME_FORMAT);
+				
+				// echo ($i." time ".($strDate)."</br>");
+				// echo ($i." condition 1 ".($fromDate)."</br>");
+				// echo ($i." condition 2 ".($toDate)."</br>");
+				// echo ($i." condition 3 ".($activities[$i]['type'])."</br>");
+				// echo ($i." condition 4 ".($activities[$i]['average_speed'])."</br>");
 				if($activityDate >= $inputDateFrom && $activityDate <= $inputDateTo && strcmp($activities[$i]['type'], "Run")==0 && $activities[$i]['average_speed'] > 0)
 				 {
 					$tmpActivity = new Activity();
