@@ -213,6 +213,7 @@ $api = new StravaApi("aab65002d2b37ec719b3f7191fb77599183b6f88"); //access token
 	301815, //Lết
 	300385, //Pikachu
 	301533, //Chạy everywhere
+	301839, //Gừng Già
 	
 	);
 	$clubIdsHN_B = array(	//10 nguoi
@@ -234,7 +235,7 @@ $api = new StravaApi("aab65002d2b37ec719b3f7191fb77599183b6f88"); //access token
 	
 	$prefixTable = "B";
 	$file = 'data_cache/'.$prefixTable.'_day_1.json';
-	$clubs = $api->reportMultiClubsWithSort($clubIdsHN_B, "2017-08-3 00:00:00", "2017-08-3 23:59:59", $file);
+	$clubs = array_merge($api->reportMultiClubsWithSort($clubIdsHN_B, "2017-08-3 00:00:00", "2017-08-3 23:59:59", $file), $clubs);
 	$counter = count($clubs);
 	
 	//debug info
@@ -469,9 +470,9 @@ $api = new StravaApi("aab65002d2b37ec719b3f7191fb77599183b6f88"); //access token
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
 
-<div class="fb-like" data-href="https://developers.facebook.com/docs/plugins/" data-layout="standard" data-action="like" data-size="small" data-show-faces="true" data-share="true"></div>
+<div class="fb-like" data-href="https://www.facebook.com/groups/VNGRunClub/" data-layout="standard" data-action="like" data-size="small" data-show-faces="true" data-share="true"></div>
   
-<div class="fb-comments" data-href="https://www.google.com.vn/" data-width="600" data-numposts="5"></div>
+<div class="fb-comments" data-href="https://www.facebook.com/groups/VNGRunClub/permalink/1527053424025370/" data-width="600" data-numposts="5"></div>
 <div id="fb-root"></div>
 <script>(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
