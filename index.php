@@ -201,7 +201,6 @@ $ID_ATHLETES= array(21136582, 19831899, 23825934, 23624350, 22984655, 23805282, 
 	
 	$clubIdsHN_A = array(	//5 nguoi
 	//group of HN
-	300411, //Start HN
 	301318, //Fast And Furious 9
     299042, //SunMoon
 	301591, //Tia chớp
@@ -215,6 +214,7 @@ $ID_ATHLETES= array(21136582, 19831899, 23825934, 23624350, 22984655, 23805282, 
 	);
 	$clubIdsHN_B = array(	//10 nguoi
 	//group of HN
+	300411, //Start HN
 	300383, //Biệt đội "."
 	300410, //GSN.Young
 	301533, //Chạy everywhere
