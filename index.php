@@ -1,7 +1,7 @@
 <?php
 // error_reporting(0);
 // ini_set("display_errors", 0);
-ini_set('max_execution_time', 300); //300 seconds = 5 minutes
+ini_set('max_execution_time', 600); //300 seconds = 5 minutes
 
 include_once('StravaApi.php');
 // $api = new StravaApi("c56d24c43d4aaa704670521c6e31b09e655a42de"); //access token of buhu
@@ -210,6 +210,7 @@ $ID_ATHLETES= array(21136582, 19831899, 23825934, 23624350, 22984655, 23805282, 
 	301778, //Kiểu gì cũng về đích
 	301815, //Lết
 	300385, //Pikachu
+	301533, //Chạy everywhere
 	
 	);
 	$clubIdsHN_B = array(	//10 nguoi
@@ -217,7 +218,6 @@ $ID_ATHLETES= array(21136582, 19831899, 23825934, 23624350, 22984655, 23805282, 
 	300411, //Start HN
 	300383, //Biệt đội "."
 	300410, //GSN.Young
-	301533, //Chạy everywhere
 	300407, //Đôi cánh thiên thần 
 	301264, //ÂM THỊNH
 	299004, //Team Rồng

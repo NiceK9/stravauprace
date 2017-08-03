@@ -186,7 +186,6 @@ class StravaApi{
 			$maxSeconds = ($maxPaceArrs[0]*60 + (count($maxPaceArrs)>1?$maxPaceArrs[1]:0));
 			$idx = 0;
 			$spyCounter = 0;
-			echo ("count act: ".$counter."</br>");
 			for($i = 0; $i < $counter; $i++)
 			{
 				if(StravaApi::in_array_r($activities[$i]['athlete']['id'], Rules::$SPY_IDS))
@@ -344,6 +343,15 @@ class StravaApi{
 	
 	public static function in_array_r($item , $array){
 		return preg_match('/"'.$item.'"/i' , json_encode($array));
+	}
+	
+	public static function log_debug($str){
+		// echo($str."</br>");
+		$file = 'log.txt';
+		// Write the contents to the file, 
+		// using the FILE_APPEND flag to append the content to the end of the file
+		// and the LOCK_EX flag to prevent anyone else writing to the file at the same time
+		file_put_contents($file, $str, FILE_APPEND | LOCK_EX);
 	}
 }
 ?>
