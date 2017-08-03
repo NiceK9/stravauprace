@@ -26,33 +26,36 @@ $ID_ATHLETES= array(21136582, 19831899, 23825934, 23624350, 22984655, 23805282, 
 
 	//////////////////////////// Find Athlete's Club /////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////
-	$clubs =$api->getAthleteClubs();
-	if($clubs!=null)
-	{
-		$clubSize = count($clubs);
-		if($clubSize>0)
-		{
-			for($i = 0; $i< $clubSize; $i++)
-			{				
-				echo("<br>[Club][". $clubs[$i]["id"]."] " . $clubs[$i]["name"] . "<br>");
-				$athletes =	$api->client->getClubMembers($clubs[$i]["id"], 1, 200);
-				echo("Member count: ". count($athletes) . "<br>");
-				for($j = 0; $j < count($athletes); $j++)
-				{
-					if(in_array((int)$athletes[$j]["id"], $ID_ATHLETES))
-						echo("[VALID]".$athletes[$j]["id"]."</br>");
-					else
-						echo("[INVALID]".$athletes[$j]["id"]."</br>");
-				}
-				echo("<br>");
-			}
-		} else {
-			print('No clubs found!');
-		}
-	} else {
-		print('No Athlete found!');
-	}
-	exit();
+	// $clubs =$api->getAthleteClubs();
+	// if($clubs!=null)
+	// {
+		// $clubSize = count($clubs);
+		// if($clubSize>0)
+		// {
+			// for($i = 0; $i< $clubSize; $i++)
+			// {				
+				// echo("<br>[Club][". $clubs[$i]["id"]."] " . $clubs[$i]["name"] . "<br>");
+				// $athletes =	$api->client->getClubMembers($clubs[$i]["id"], 1, 200);
+				// echo("Member count: ". count($athletes) . "<br>");
+				// for($j = 0; $j < count($athletes); $j++)
+				// {
+					// if(!StravaApi::in_array_r($athletes[$j]["id"], Rules::$SPY_IDS))
+					// {
+						// if(in_array((int)$athletes[$j]["id"], $ID_ATHLETES))
+							// echo("[VALID]".$athletes[$j]["id"]."</br>");
+						// else
+							// echo("[INVALID]".$athletes[$j]["id"]."</br>");
+					// }
+				// }
+				// echo("<br>");
+			// }
+		// } else {
+			// print('No clubs found!');
+		// }
+	// } else {
+		// print('No Athlete found!');
+	// }
+	// exit();
 	//////////////////////////// Find Raw Club's Activities////////////////////
 	//////////////////////////////////////////////////////////////////////////////
 	// $club = $api->getClubRawActivities(298988);
@@ -194,10 +197,42 @@ $ID_ATHLETES= array(21136582, 19831899, 23825934, 23624350, 22984655, 23805282, 
 	301815, //Lết
 	
 	);
-	$prefixTable = "A";
 	
+	
+	$clubIdsHN_A = array(	//5 nguoi
+	//group of HN
+	300411, //Start HN
+	301318, //Fast And Furious 9
+    299042, //SunMoon
+	301591, //Tia chớp
+	300091, //Lộn cái bàn
+	300382, //ZSL - Super girl
+	301784, //Meow Meow
+	301778, //Kiểu gì cũng về đích
+	301815, //Lết
+	300385, //Pikachu
+	
+	);
+	$clubIdsHN_B = array(	//10 nguoi
+	//group of HN
+	300383, //Biệt đội "."
+	300410, //GSN.Young
+	301533, //Chạy everywhere
+	300407, //Đôi cánh thiên thần 
+	301264, //ÂM THỊNH
+	299004, //Team Rồng
+	301102, //Ban "Cờ - him"
+	
+	);
+	$prefixTable = "A";	
 	$file = 'data_cache/'.$prefixTable.'_day_1.txt';
-	$clubs = $api->reportMultiClubsWithSort($clubIds, "2017-08-1 00:00:00", "2017-08-2 23:59:59", $file);
+	$clubs = $api->reportMultiClubsWithSort($clubIdsHN_A, "2017-08-3 00:00:00", "2017-08-3 23:59:59", $file);
+	$counter = count($clubs);
+	
+	
+	$prefixTable = "B";
+	$file = 'data_cache/'.$prefixTable.'_day_1.txt';
+	$clubs = $api->reportMultiClubsWithSort($clubIdsHN_B, "2017-08-3 00:00:00", "2017-08-3 23:59:59", $file);
 	$counter = count($clubs);
 	
 	
@@ -242,7 +277,30 @@ $ID_ATHLETES= array(21136582, 19831899, 23825934, 23624350, 22984655, 23805282, 
 	$totalAthletes = array();
 	for($d = 1; $d <= 12; $d++)
 	{
-		$filename = 'data_cache/'.$prefixTable."_day_".$d.".txt";
+		$filename = 'data_cache/A_day_'.$d.".txt";
+		if (file_exists($filename)) 
+		{
+			$records = json_decode(file_get_contents($filename));
+			foreach ($records as &$record)
+			{
+				foreach ($record->athletes as &$athlete)
+				{
+					$added = false	;		
+					foreach ($totalAthletes as &$athleteInTable)
+					{ 
+						if ($athlete->id == $athleteInTable->id) {
+							$athleteInTable->distance += $athlete->distance;
+							$added = true;
+							break;
+						}
+					}
+					
+					if($added == false)
+						array_push($totalAthletes, $athlete);
+				}
+			}
+		}
+		$filename = 'data_cache/B_day_'.$d.".txt";
 		if (file_exists($filename)) 
 		{
 			$records = json_decode(file_get_contents($filename));
