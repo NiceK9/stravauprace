@@ -3,9 +3,10 @@ extends ../node_modules/pug-bootstrap/_bootstrap
 append styles
 	+bootswatch("flatly")
 	link(href='../css/theme.css', rel='stylesheet')
+	link(href='../css/ribbon.css', rel='stylesheet')
 block body
 	nav.navbar.navbar-default.navbar-fixed-top
-		.container
+		.container-fluid.theme-showcase
 			.navbar-header
 				button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar', aria-expanded='false', aria-controls='navbar')
 					span.sr-only Toggle navigation
@@ -24,68 +25,47 @@ block body
 					li
 						a(href='/contact') Liên hệ
 	.container.theme-showcase(role='main')
-		.page-header
-			h2 Bảng xếp hạng
+		.panel
+			button.btn.btn-danger.ribbon(href='/')
+				div(style="font-size: 180%; font-weight: bold") Bảng xếp hạng
+		.panel-group
+			ul.nav(class="nav-pills nav-justified")
+				li.active(role="presentation")
+					a(href='/') Chung cuộc
+				li(role="presentation")
+					a(href='/a') Bảng A
+				li(role="presentation")
+					a(href='/b') Bảng B
 		.panel-group
 			.panel(class="panel-primary")
 				table.table(class="btn-primary")
 					thead
-						th.col-md Rank
-						th.col-md
-						th.col-md-5 Tên đội
-						th.col-md-3.text-right Tổng thành tích (km)
-						th.col-md-3.text-right Tổng thời gian
+						th.col-md-1.text-center(style="vertical-align: middle;")
+						th.col-md.text-center(style="vertical-align: middle;") Rank
+						th.col-md-1(style="vertical-align: middle;")
+						th.col-md-4(style="vertical-align: middle;") Runner
+						th.col-md-1.text-center(style="vertical-align: middle;") Giới tính
+						th.col-md-4.text-right(style="vertical-align: middle;") Tổng thành tích (km)
 		.panel-group(id="accordionleaderboard", role="tablist", aria-multiselectable="true")
-			for team in data
-				-var type = (team.isTop) ? "success" : "primary";
-				.panel(class="panel-" + type, data-toggle="collapse", href="#collapse" + team.id, aria-expanded="true")
-					-var type = (team.isTop) ? "success" : "none";
-					table.table(class="btn-" + type, role="tab", id="heading" + team.id)
-						thead
-							th.col-md.text-center
-								div= "#" + team.rank
-							th.col-md
-								a(href=team.url)
-									img.img-rounded.center-block(src=team.profile, alt=team.profile, width=20, height=20)
-							th.col-md-5
-								div= team.name
-							th.col-md-3.text-right
-								div= team.totalDistanceText
-							th.col-md-3.text-right
-								div= team.totalTimeText
-					.panel-collapse.collapse(id="collapse" + team.id, role="tabpanel", aria-labelledby="heading" + team.id)
-						.panel-body
-							table.table.table-responsive(class="table-condensed")
+			for member in data
+				-if (!member.isspy)
+					-var type = (member.isTop) ? ((member.rank <= 1) ? "success" : "info") : "default";
+					.panel(class="panel-" + type, data-toggle="collapse", aria-expanded="true")
+						-var type = (member.isTop) ? ((member.rank <= 1) ? "success" : "info") : "none";
+							table.table(class="btn-" + type)
 								thead
-									th.col-md.text-center Rank
-									th.col-md
-									th.col-md-2 Runner
-									th.col-md-1.text-center Giới tính
-									th.col-md-2.text-right Thành tích (km)
-									th.col-md-2.text-right Thời gian
-									th.col-md-2.text-right Pace avg. (phút/km)
-									th.col-md-2.text-right Pace max. (phút/km)
-								tbody
-									for member in team.members
-										-var type = (member.isTop) ? "info" : "none";
-										tr(class="panel-" + type)
-											td.col-md.text-center
-												div= member.rank
-											td.col-md
-												img.img-rounded.center-block(src=member.profile_medium, alt=member.fullname, width=20, height=20)
-											td.col-md-2
-												div= member.fullName
-											td.col-md-1.text-center
-												div= member.gender
-											td.col-md-2.text-right
-												div= member.totalDistanceText
-											td.col-md-2.text-right
-												div= member.totalTimeText
-											td.col-md-2.text-right
-												div= member.paceAverage.text
-											td.col-md-2.text-right
-												div= member.paceMax.text
-	nav.navbar.fixed-bottom
-		.container
-			p.text-center Copyright 2017 by Nam Nguyễn
-			p.text-center Powered by VNG
+									th.col-md-1(style="vertical-align: middle;")
+									th.col-md.text-center(style="vertical-align: middle;")
+										div= member.rank
+									th.col-md-1(style="vertical-align: middle;")
+										a(href=member.url)
+											img.img-rounded.center-block(src=member.profile_medium, alt=member.name, width=30, height=30)
+									th.col-md-4(style="vertical-align: middle;")
+										div= member.name
+									th.col-md-1.text-center(style="vertical-align: middle;")
+										div= member.gender
+									th.col-md-4.text-right(style="vertical-align: middle;")
+										div= member.totalDistanceText
+	footer.footer
+			.container
+				p.text-center.text-muted Copyright © 2017 by VNG GST Developers
