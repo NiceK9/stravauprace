@@ -13,6 +13,8 @@ class Activity{
 	public $avgPace;
 	public $isValid;
 	public $isPowerX2;
+	public $isTreadMill;
+	public $photoCount;
 }
 
 ?>

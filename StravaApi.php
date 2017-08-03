@@ -14,6 +14,16 @@ define ("TIME_ZONE", 'Asia/Ho_Chi_Minh');
 define ("TIME_FORMAT", 'Y-m-d H:i:s');
 define ("TIME_INPUT_FORMAT", 'Y-m-d');
 
+function log_debug($str){
+	// echo($str."</br>");
+	$file = 'log.txt';
+	// Write the contents to the file, 
+	// using the FILE_APPEND flag to append the content to the end of the file
+	// and the LOCK_EX flag to prevent anyone else writing to the file at the same time
+	$str.="\n";
+	file_put_contents($file, $str, FILE_APPEND | LOCK_EX);
+}
+	
 class StravaApi{
 	public $token;
 	public $adapter;
@@ -155,6 +165,8 @@ class StravaApi{
 
 		$clubInfos->activities = array();
 		$activities = $this->client->getClubActivities($clubId, 1, 200);		
+		// print_r(json_encode($activities));
+		
 		$athletes =	$this->client->getClubMembers($clubId, 1, 200);
 		
 		$club = $this->client->getClub($clubId);
@@ -166,6 +178,7 @@ class StravaApi{
 		for($i = 0; $i < count($athletes); $i++)
 		{
 			$athletes[$i]["name"] = $athletes[$i]['firstname'] . " " . $athletes[$i]['lastname'];
+			$athletes[$i]["oridistance"] = 0;
 			$athletes[$i]["distance"] = 0;
 			$athletes[$i]["isspy"] = StravaApi::in_array_r($athletes[$i]['id'], Rules::$SPY_IDS);
 			$clubInfos->athletes[$athletes[$i]["id"]] = $athletes[$i];
@@ -176,6 +189,7 @@ class StravaApi{
 		
 		$counter = count($activities);
 		$clubInfos->totalActivitiesCounter  = $counter;
+		log_debug("count act: ".$counter);
 		if($counter>0)
 		{
 			$inputDateFrom = DateTime::createFromFormat(TIME_FORMAT, $fromDate, new DateTimeZone(TIME_ZONE));
@@ -187,7 +201,8 @@ class StravaApi{
 			$idx = 0;
 			$spyCounter = 0;
 			for($i = 0; $i < $counter; $i++)
-			{
+			{				
+				log_debug("checking act: ".$counter);
 				if(StravaApi::in_array_r($activities[$i]['athlete']['id'], Rules::$SPY_IDS))
 				{
 					$athleteName = $activities[$i]['athlete']['firstname'] . " " . $activities[$i]['athlete']['lastname'];
@@ -200,7 +215,6 @@ class StravaApi{
 						if(!StravaApi::in_array_r($athleteName, $clubInfos->spyList))
 							$clubInfos->spyList[$spyCounter++] = $athleteName;
 					}
-					echo ($i." skip</br>");
 					continue;
 				}
 				
@@ -212,11 +226,11 @@ class StravaApi{
 				$activityDate->setTimezone(new DateTimeZone('Asia/Ho_Chi_Minh')); //convert GMT +7
 				$strDate = $activityDate->format(TIME_FORMAT);
 				
-				// echo ($i." time ".($strDate)."</br>");
-				// echo ($i." condition 1 ".($fromDate)."</br>");
-				// echo ($i." condition 2 ".($toDate)."</br>");
-				// echo ($i." condition 3 ".($activities[$i]['type'])."</br>");
-				// echo ($i." condition 4 ".($activities[$i]['average_speed'])."</br>");
+				log_debug ($i." time ".($strDate)."</br>");
+				log_debug ($i." condition 1 ".($fromDate)."</br>");
+				log_debug ($i." condition 2 ".($toDate)."</br>");
+				log_debug ($i." condition 3 ".($activities[$i]['type'])."</br>");
+				log_debug ($i." condition 4 ".($activities[$i]['average_speed'])."</br>");
 				if($activityDate >= $inputDateFrom && $activityDate <= $inputDateTo && strcmp($activities[$i]['type'], "Run")==0 && $activities[$i]['average_speed'] > 0)
 				 {
 					$tmpActivity = new Activity();
@@ -230,20 +244,33 @@ class StravaApi{
 					$tmpActivity->startTime = $strDate;
 					$tmpActivity->avgPace = StravaApi::convertSpeedToPace($activities[$i]['average_speed']);
 					$avgSecondToRun = StravaApi::speed_SecondsPerKm($activities[$i]['average_speed']);
+					
+					$isTreadMill = $activities[$i]["manual"];
+					$tmpActivity->isTreadMill = $isTreadMill;
+					$tmpActivity->photoCount = $activities[$i]['total_photo_count'];
+					$validTreadMill = $tmpActivity->photoCount >= Rules::$PHOTO_REQUIRE_TREADMILL;
+					
 					if($avgSecondToRun>= $minSeconds && $avgSecondToRun <= $maxSeconds && $activities[$i]['distance'] >= Rules::$MIN_DISTANCE){
-						$tmpActivity->isValid = true;
-						$isDistX2 = $this->isDatetimeValidInArray(Rules::$DATE_THEWORLD_X2, $activityDate) || (Rules::$IS_FEMALE_X2_DISTANCE && StravaApi::in_array_r($activities[$i]['athlete']['id'], Rules::$FEMALE_IDS));
-						if($isDistX2){
-							$clubInfos->totalDistance += $activities[$i]['distance']*2/1000;
-							$clubInfos->athletes[$activities[$i]['athlete']['id']]["distance"] += ($activities[$i]['distance']*2)/1000;
-							$clubInfos->athletes[$activities[$i]['athlete']['id']]["sex"] = "F";
-							$tmpActivity->isPowerX2 = true;
-						}
-						else{
-							$clubInfos->totalDistance += $activities[$i]['distance']/1000;
-							$clubInfos->athletes[$activities[$i]['athlete']['id']]["distance"] += $activities[$i]['distance']/1000;
-							$clubInfos->athletes[$activities[$i]['athlete']['id']]["sex"] = "M";
-							$tmpActivity->isPowerX2 = false;
+						if($isTreadMill && (Rules::$BAN_TREADMILL == true || !$validTreadMill))
+							$tmpActivity->isValid = false;
+						else
+						{
+							$tmpActivity->isValid = true;
+							$isDistX2 = $this->isDatetimeValidInArray(Rules::$DATE_THEWORLD_X2, $activityDate) || (Rules::$IS_FEMALE_X2_DISTANCE && StravaApi::in_array_r($activities[$i]['athlete']['id'], Rules::$FEMALE_IDS));
+							if($isDistX2){
+								$clubInfos->totalDistance += $activities[$i]['distance']*2/1000;
+								$clubInfos->athletes[$activities[$i]['athlete']['id']]["oridistance"] += $activities[$i]['distance']/1000;
+								$clubInfos->athletes[$activities[$i]['athlete']['id']]["distance"] += ($activities[$i]['distance']*2)/1000;
+								$clubInfos->athletes[$activities[$i]['athlete']['id']]["sex"] = "F";
+								$tmpActivity->isPowerX2 = true;
+							}
+							else{
+								$clubInfos->totalDistance += $activities[$i]['distance']/1000;
+								$clubInfos->athletes[$activities[$i]['athlete']['id']]["oridistance"] += $activities[$i]['distance']/1000;
+								$clubInfos->athletes[$activities[$i]['athlete']['id']]["distance"] += $activities[$i]['distance']/1000;
+								$clubInfos->athletes[$activities[$i]['athlete']['id']]["sex"] = "M";
+								$tmpActivity->isPowerX2 = false;
+							}
 						}
 					}
 					else
@@ -343,15 +370,6 @@ class StravaApi{
 	
 	public static function in_array_r($item , $array){
 		return preg_match('/"'.$item.'"/i' , json_encode($array));
-	}
-	
-	public static function log_debug($str){
-		// echo($str."</br>");
-		$file = 'log.txt';
-		// Write the contents to the file, 
-		// using the FILE_APPEND flag to append the content to the end of the file
-		// and the LOCK_EX flag to prevent anyone else writing to the file at the same time
-		file_put_contents($file, $str, FILE_APPEND | LOCK_EX);
 	}
 }
 ?>
