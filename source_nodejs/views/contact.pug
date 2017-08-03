@@ -3,9 +3,10 @@ extends ../node_modules/pug-bootstrap/_bootstrap
 append styles
 	+bootswatch("flatly")
 	link(href='../css/theme.css', rel='stylesheet')
+	link(href='../css/sticky-footer-simple.css', rel='stylesheet')
 block body
 	nav.navbar.navbar-default.navbar-fixed-top
-		.container
+		.container-fluid.theme-showcase
 			.navbar-header
 				button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar', aria-expanded='false', aria-controls='navbar')
 					span.sr-only Toggle navigation
@@ -28,3 +29,7 @@ block body
 			h2 Liên hệ
 			p Mọi thắc mắc xin liên hệ qua email namnhq@vng.com.vn.
 			| Ý kiến thì lên phường =))
+
+	footer.footer
+			.container
+				p.text-center.text-muted Copyright © 2017 by VNG GST Developers
