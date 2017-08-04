@@ -1,12 +1,12 @@
 <?php
 // error_reporting(0);
 // ini_set("display_errors", 0);
-ini_set('max_execution_time', 600); //300 seconds = 5 minutes
+ini_set('max_execution_time', 6000); //300 seconds = 5 minutes
 
 include_once('StravaApi.php');
 // $api = new StravaApi("c56d24c43d4aaa704670521c6e31b09e655a42de"); //access token of buhu
 // $api = new StravaApi("fd76e56b9f860e40486315f4043298a266968a52"); //access token of Nice
-//$api = new StravaApi("c138b46d4d1d1d27d0df268499ef0a3dbedfeb0e"); //access token of BTC UpRace HCM
+// $api = new StravaApi("c138b46d4d1d1d27d0df268499ef0a3dbedfeb0e"); //access token of BTC UpRace HCM
 $api = new StravaApi("aab65002d2b37ec719b3f7191fb77599183b6f88"); //access token of BTC UpRace HN
 	//////////////////////////// Find Athlete ////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////
@@ -33,18 +33,24 @@ $api = new StravaApi("aab65002d2b37ec719b3f7191fb77599183b6f88"); //access token
 		// {
 			// for($i = 0; $i< $clubSize; $i++)
 			// {				
-				// echo("<br>[Club][". $clubs[$i]["id"]."] " . $clubs[$i]["name"] . "<br>");
+				// echo("<br>[Club][". $clubs[$i]["id"]."] [" . $clubs[$i]["name"] . "]");
 				// $athletes =	$api->client->getClubMembers($clubs[$i]["id"], 1, 200);
-				// echo("Member count: ". count($athletes) . "<br>");
+				// echo(" [Member count: ". count($athletes) . "]<br>");
 				// for($j = 0; $j < count($athletes); $j++)
 				// {
 					// if(!StravaApi::in_array_r($athletes[$j]["id"], Rules::$SPY_IDS))
 					// {
 						// if(in_array((int)$athletes[$j]["id"], Rules::$ID_ATHLETES))
+						// {							
 							// echo("[VALID]".$athletes[$j]["id"]."</br>");
-						// else
+							// array_splice(Rules::$ID_ATHLETES, array_search((int)$athletes[$j]["id"], Rules::$ID_ATHLETES), 1);
+							
+						// }	
+						// else{
 							// echo("[INVALID]".$athletes[$j]["id"]."</br>");
+						// }
 					// }
+					
 				// }
 				// echo("<br>");
 			// }
@@ -54,6 +60,7 @@ $api = new StravaApi("aab65002d2b37ec719b3f7191fb77599183b6f88"); //access token
 	// } else {
 		// print('No Athlete found!');
 	// }
+	// print_r(json_encode(Rules::$ID_ATHLETES));
 	// exit();
 	//////////////////////////// Find Raw Club's Activities////////////////////
 	//////////////////////////////////////////////////////////////////////////////
@@ -215,6 +222,64 @@ $api = new StravaApi("aab65002d2b37ec719b3f7191fb77599183b6f88"); //access token
 	301533, //Chạy everywhere
 	301839, //Gừng Già
 	
+	//group hcm
+// 294539,
+// 294550,
+// 295557,
+// 295380,
+// 295587,
+// 297405,
+// 297386,
+// 299848,
+// 299836,
+// 294773,
+// 300341,
+// 297935,
+// 298988,
+// 294541,
+// 298475,
+// 299859,
+// 299841,
+// 300344,
+// 299571,
+// 298477,
+// 299858,
+// 301338,
+// 301243,
+// 299862,
+// 299882,
+// 298207,
+// 298999,
+// 297140,
+// 297957,
+// 301256,
+// 298753,
+// 299871,
+// 298768,
+// 300376,
+// 300080,
+// 298867,
+// 298206,
+// 300661,
+// 301790,
+// 295285,
+// 296844,
+// 299884,
+// 298251,
+// 297997,
+// 298232,
+// 300093,
+// 300065,
+// 300643,
+// 297115,
+// 301594,
+// 301588,
+// 301813,
+// 301796,
+// 299620,
+// 298841,
+// 300365,
+	
 	);
 	$clubIdsHN_B = array(	//10 nguoi
 	//group of HN
@@ -228,14 +293,14 @@ $api = new StravaApi("aab65002d2b37ec719b3f7191fb77599183b6f88"); //access token
 	
 	);
 	$prefixTable = "A";	
-	$file = 'data_cache/'.$prefixTable.'_day_1.json';
-	$clubs = $api->reportMultiClubsWithSort($clubIdsHN_A, "2017-08-3 00:00:00", "2017-08-3 23:59:59", $file);
+	$file = 'data_cache/'.$prefixTable.'_day_2.json';
+	$clubs = $api->reportMultiClubsWithSort($clubIdsHN_A, "2017-08-1 00:00:00", "2017-08-4 23:59:59", $file);
 	$counter = count($clubs);
 	
 	
 	$prefixTable = "B";
-	$file = 'data_cache/'.$prefixTable.'_day_1.json';
-	$clubs = array_merge($api->reportMultiClubsWithSort($clubIdsHN_B, "2017-08-3 00:00:00", "2017-08-3 23:59:59", $file), $clubs);
+	$file = 'data_cache/'.$prefixTable.'_day_2.json';
+	$clubs = array_merge($api->reportMultiClubsWithSort($clubIdsHN_B, "2017-08-1 00:00:00", "2017-08-4 23:59:59", $file), $clubs);
 	$counter = count($clubs);
 	
 	//debug info

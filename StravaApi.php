@@ -189,7 +189,7 @@ class StravaApi{
 		
 		$counter = count($activities);
 		$clubInfos->totalActivitiesCounter  = $counter;
-		log_debug("count act: ".$counter);
+		// log_debug("count act: ".$counter);
 		if($counter>0)
 		{
 			$inputDateFrom = DateTime::createFromFormat(TIME_FORMAT, $fromDate, new DateTimeZone(TIME_ZONE));
@@ -202,7 +202,7 @@ class StravaApi{
 			$spyCounter = 0;
 			for($i = 0; $i < $counter; $i++)
 			{				
-				log_debug("checking act: ".$counter);
+				// log_debug("checking act: ".$counter);
 				if(StravaApi::in_array_r($activities[$i]['athlete']['id'], Rules::$SPY_IDS))
 				{
 					$athleteName = $activities[$i]['athlete']['firstname'] . " " . $activities[$i]['athlete']['lastname'];
@@ -226,11 +226,11 @@ class StravaApi{
 				$activityDate->setTimezone(new DateTimeZone('Asia/Ho_Chi_Minh')); //convert GMT +7
 				$strDate = $activityDate->format(TIME_FORMAT);
 				
-				log_debug ($i." time ".($strDate)."</br>");
-				log_debug ($i." condition 1 ".($fromDate)."</br>");
-				log_debug ($i." condition 2 ".($toDate)."</br>");
-				log_debug ($i." condition 3 ".($activities[$i]['type'])."</br>");
-				log_debug ($i." condition 4 ".($activities[$i]['average_speed'])."</br>");
+				// log_debug ($i." time ".($strDate)."</br>");
+				// log_debug ($i." condition 1 ".($fromDate)."</br>");
+				// log_debug ($i." condition 2 ".($toDate)."</br>");
+				// log_debug ($i." condition 3 ".($activities[$i]['type'])."</br>");
+				// log_debug ($i." condition 4 ".($activities[$i]['average_speed'])."</br>");
 				if($activityDate >= $inputDateFrom && $activityDate <= $inputDateTo && strcmp($activities[$i]['type'], "Run")==0 && $activities[$i]['average_speed'] > 0)
 				 {
 					$tmpActivity = new Activity();
@@ -291,6 +291,7 @@ class StravaApi{
 		$counter = count($clubIds);
 		for($i = 0; $i < $counter; $i++)
 		{
+			log_debug($filename."---read club: ".$clubIds[$i]["name"]. " ".$i."/".$counter);
 			$clubs[$i] = $this->getClubTotalDistance($clubIds[$i], $fromDate, $toDate);
 		}
 		usort($clubs, array("StravaApi", "uCompare"));
