@@ -294,13 +294,13 @@ $api = new StravaApi("aab65002d2b37ec719b3f7191fb77599183b6f88"); //access token
 	);
 	$prefixTable = "A";	
 	$file = 'data_cache/'.$prefixTable.'_day_2.json';
-	$clubs = $api->reportMultiClubsWithSort($clubIdsHN_A, "2017-08-1 00:00:00", "2017-08-4 23:59:59", $file);
+	$clubs = $api->reportMultiClubsWithSort($clubIdsHN_A, "2017-08-4 00:00:00", "2017-08-4 23:59:59", $file);
 	$counter = count($clubs);
 	
 	
 	$prefixTable = "B";
 	$file = 'data_cache/'.$prefixTable.'_day_2.json';
-	$clubs = array_merge($api->reportMultiClubsWithSort($clubIdsHN_B, "2017-08-1 00:00:00", "2017-08-4 23:59:59", $file), $clubs);
+	$clubs = array_merge($api->reportMultiClubsWithSort($clubIdsHN_B, "2017-08-4 00:00:00", "2017-08-4 23:59:59", $file), $clubs);
 	$counter = count($clubs);
 	
 	//debug info
