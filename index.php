@@ -209,15 +209,16 @@ Rules::createRuleHN();
 	
 	);
 	
+	$configDay = Rules::$configDays[Rules::$currentDay];
 	$prefixTable = "A";	
-	$file = 'data_cache/'.$prefixTable.'_day_4.json';
-	$clubs = $api->reportMultiClubsWithSort(Rules::$clubIds_A, "2017-08-6 00:00:00", "2017-08-6 23:59:59", $file);
+	$file = 'data_cache/'.$prefixTable.'_day_'.$configDay['day'].'.json';
+	$clubs = $api->reportMultiClubsWithSort(Rules::$clubIds_A, $configDay['from'], $configDay['to'], $file);
 	$counter = count($clubs);
 	
 	
 	$prefixTable = "B";
-	$file = 'data_cache/'.$prefixTable.'_day_4.json';
-	$clubs = array_merge($api->reportMultiClubsWithSort(Rules::$clubIds_B, "2017-08-6 00:00:00", "2017-08-6 23:59:59", $file), $clubs);
+	$file = 'data_cache/'.$prefixTable.'_day_'.$configDay['day'].'.json';
+	$clubs = array_merge($api->reportMultiClubsWithSort(Rules::$clubIds_B, $configDay['from'], $configDay['to'], $file), $clubs);
 	$counter = count($clubs);
 	
 	//debug info
