@@ -35,7 +35,7 @@ Rules::createRuleHN();
 		// {
 			// for($i = 0; $i< $clubSize; $i++)
 			// {				
-				// echo("<br>[Club][". $clubs[$i]["id"]."] [" . $clubs[$i]["name"] . "]");
+				// echo("<br>".($i+1)."[Club][". $clubs[$i]["id"]."] [" . $clubs[$i]["name"] . "] [" . $clubs[$i]["private"] . "]");
 				// $athletes =	$api->client->getClubMembers($clubs[$i]["id"], 1, 200);
 				// echo(" [Member count: ". count($athletes) . "]<br>");
 				// for($j = 0; $j < count($athletes); $j++)
@@ -209,100 +209,15 @@ Rules::createRuleHN();
 	
 	);
 	
-	
-	$clubIdsHN_A = array(	//5 nguoi
-	//group of HN
-	301318, //Fast And Furious 9
-    299042, //SunMoon
-	301591, //Tia chớp
-	300091, //Lộn cái bàn
-	300382, //ZSL - Super girl
-	301784, //Meow Meow
-	301778, //Kiểu gì cũng về đích
-	301815, //Lết
-	300385, //Pikachu
-	301533, //Chạy everywhere
-	301839, //Gừng Già
-	
-	//group hcm
-// 294539,
-// 294550,
-// 295557,
-// 295380,
-// 295587,
-// 297405,
-// 297386,
-// 299848,
-// 299836,
-// 294773,
-// 300341,
-// 297935,
-// 298988,
-// 294541,
-// 298475,
-// 299859,
-// 299841,
-// 300344,
-// 299571,
-// 298477,
-// 299858,
-// 301338,
-// 301243,
-// 299862,
-// 299882,
-// 298207,
-// 298999,
-// 297140,
-// 297957,
-// 301256,
-// 298753,
-// 299871,
-// 298768,
-// 300376,
-// 300080,
-// 298867,
-// 298206,
-// 300661,
-// 301790,
-// 295285,
-// 296844,
-// 299884,
-// 298251,
-// 297997,
-// 298232,
-// 300093,
-// 300065,
-// 300643,
-// 297115,
-// 301594,
-// 301588,
-// 301813,
-// 301796,
-// 299620,
-// 298841,
-// 300365,
-	
-	);
-	$clubIdsHN_B = array(	//10 nguoi
-	//group of HN
-	300411, //Start HN
-	300383, //Biệt đội "."
-	300410, //GSN.Young
-	300407, //Đôi cánh thiên thần 
-	301264, //ÂM THỊNH
-	299004, //Team Rồng
-	301102, //Ban "Cờ - him"
-	
-	);
 	$prefixTable = "A";	
 	$file = 'data_cache/'.$prefixTable.'_day_4.json';
-	$clubs = $api->reportMultiClubsWithSort($clubIdsHN_A, "2017-08-6 00:00:00", "2017-08-6 23:59:59", $file);
+	$clubs = $api->reportMultiClubsWithSort(Rules::$clubIds_A, "2017-08-6 00:00:00", "2017-08-6 23:59:59", $file);
 	$counter = count($clubs);
 	
 	
 	$prefixTable = "B";
 	$file = 'data_cache/'.$prefixTable.'_day_4.json';
-	$clubs = array_merge($api->reportMultiClubsWithSort($clubIdsHN_B, "2017-08-6 00:00:00", "2017-08-6 23:59:59", $file), $clubs);
+	$clubs = array_merge($api->reportMultiClubsWithSort(Rules::$clubIds_B, "2017-08-6 00:00:00", "2017-08-6 23:59:59", $file), $clubs);
 	$counter = count($clubs);
 	
 	//debug info
@@ -321,6 +236,9 @@ Rules::createRuleHN();
 			{ 
 				$content = ("[".$activities[$i]->Id . "][" . $activities[$i]->startTime . "] " . $activities[$i]->athleteName . " " . $activities[$i]->type . " " . $activities[$i]->distance . "(km) in " . $activities[$i]->duration . " with pace " . $activities[$i]->avgPace . "<br>");
 				$content = ("[".$activities[$i]->Id . "][" . $activities[$i]->startTime . "] " . $activities[$i]->athleteName . " " . $activities[$i]->type . " " . $activities[$i]->distance . "(km)(bonus: ".$activities[$i]->bonusDistance." km) in " . $activities[$i]->duration . " with pace " . $activities[$i]->avgPace . "<br>");
+				if($activities[$i]->isTreadMill)
+					$content = "[TreadMill][Photo ".$activities[$i]->photoCount."]". $content;
+				
 				if($activities[$i]->isValid)
 				{
 					$content = "[OK]" . $content;

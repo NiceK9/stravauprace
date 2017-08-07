@@ -13,11 +13,15 @@ class Rules{
 	public static $SPY_IDS = array("23852535", //Admin HCM
 			"23725645" //Admin HN
 			); // Id of spy  BTC UpRace for now
-
+	
+	public static $clubIds_A = array();	
+	public static $clubIds_B = array();
+	public static $areaCode = "ABC";
 
 
 	public static function createRuleHN()
 	{
+		Rules::$areaCode = "HN";
 		Rules::$MIN_PACE = "4:30"; //5:00 HCM
 		Rules::$MAX_PACE = "10:30"; //9:59 HCM
 		Rules::$MIN_DISTANCE = 0; // 1000m for HCM
@@ -82,10 +86,38 @@ class Rules{
 "23652577",
 "23902437",
 "23659372");
+	
+	Rules::$clubIds_A = array(	//5 nguoi
+	//group of HN
+	301318, //Fast And Furious 9
+    299042, //SunMoon
+	301591, //Tia chớp
+	300091, //Lộn cái bàn
+	300382, //ZSL - Super girl
+	301784, //Meow Meow
+	301778, //Kiểu gì cũng về đích
+	301815, //Lết
+	300385, //Pikachu
+	301533, //Chạy everywhere
+	301839, //Gừng Già	
+	);
+	
+	Rules::$clubIds_B = array(	//10 nguoi
+	//group of HN
+	300411, //Start HN
+	300383, //Biệt đội "."
+	300410, //GSN.Young
+	300407, //Đôi cánh thiên thần 
+	301264, //ÂM THỊNH
+	299004, //Team Rồng
+	301102, //Ban "Cờ - him"
+	
+	);
 	}
 	
 	public static function createRuleHCM()
 	{
+		Rules::$areaCode = "HCM";
 		Rules::$MIN_PACE = "5:00";
 		Rules::$MAX_PACE = "9:59";
 		Rules::$MIN_DISTANCE = 1000;
@@ -611,6 +643,72 @@ class Rules{
 23676297,
 );
 		Rules::$FEMALE_IDS = array();
+			
+	Rules::$clubIds_A = array(	//5 nguoi	
+	//group hcm
+294539,
+294550,
+295557,
+295380,
+295587,
+297405,
+297386,
+299848,
+299836,
+294773,
+300341,
+297935,
+298988,
+294541,
+298475,
+299859,
+299841,
+300344,
+299571,
+298477,
+299858,
+301338,
+301243,
+299862,
+299882,
+298207,
+298999,
+297140,
+297957,
+301256,
+298753,
+299871,
+298768,
+300376,
+300080,
+298867,
+298206,
+300661,
+301790,
+295285,
+296844,
+299884,
+298251,
+297997,
+298232,
+300093,
+300065,
+300643,
+297115,
+301594,
+301588,
+301813,
+301796,
+299620,
+298841,
+300365,
+	
+	);
+	
+		
+	Rules::$clubIds_B = array(	//10 nguoi
+
+	);
 	}
 }
 ?>
