@@ -7,12 +7,14 @@ include_once('StravaApi.php');
 // $api = new StravaApi("c56d24c43d4aaa704670521c6e31b09e655a42de"); //access token of buhu
 // $api = new StravaApi("fd76e56b9f860e40486315f4043298a266968a52"); //access token of Nice
 // $api = new StravaApi("c138b46d4d1d1d27d0df268499ef0a3dbedfeb0e"); //access token of BTC UpRace HCM
+// Rules::createRuleHCM();
 $api = new StravaApi("aab65002d2b37ec719b3f7191fb77599183b6f88"); //access token of BTC UpRace HN
+Rules::createRuleHN();
 	//////////////////////////// Find Athlete ////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////
 	// $athlete =$api->getCurrentAthlete("16397134");
 	// print_r($athlete);
-	
+
 	//////////////////////////////// Find Club ///////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////
 	// $club = $api->getClub(294541);
@@ -299,7 +301,7 @@ $api = new StravaApi("aab65002d2b37ec719b3f7191fb77599183b6f88"); //access token
 	
 	
 	$prefixTable = "B";
-	$file = 'data_cache/'.$prefixTable.'_day_3.json';
+	$file = 'data_cache/'.$prefixTable.'_day_4.json';
 	$clubs = array_merge($api->reportMultiClubsWithSort($clubIdsHN_B, "2017-08-6 00:00:00", "2017-08-6 23:59:59", $file), $clubs);
 	$counter = count($clubs);
 	
