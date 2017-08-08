@@ -6,10 +6,10 @@ ini_set('max_execution_time', 6000); //300 seconds = 5 minutes
 include_once('StravaApi.php');
 // $api = new StravaApi("c56d24c43d4aaa704670521c6e31b09e655a42de"); //access token of buhu
 // $api = new StravaApi("fd76e56b9f860e40486315f4043298a266968a52"); //access token of Nice
-// $api = new StravaApi("c138b46d4d1d1d27d0df268499ef0a3dbedfeb0e"); //access token of BTC UpRace HCM
-// Rules::createRuleHCM();
-$api = new StravaApi("aab65002d2b37ec719b3f7191fb77599183b6f88"); //access token of BTC UpRace HN
-Rules::createRuleHN();
+$api = new StravaApi("c138b46d4d1d1d27d0df268499ef0a3dbedfeb0e"); //access token of BTC UpRace HCM
+Rules::createRuleHCM();
+// $api = new StravaApi("aab65002d2b37ec719b3f7191fb77599183b6f88"); //access token of BTC UpRace HN
+// Rules::createRuleHN();
 	//////////////////////////// Find Athlete ////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////
 	// $athlete =$api->getCurrentAthlete("16397134");
@@ -170,14 +170,12 @@ Rules::createRuleHN();
 	//Display UI all score
 	
 	$configDay = Rules::$configDays[Rules::$currentDay];
-	$prefixTable = "A";	
-	$file = 'data_cache/'.$prefixTable.'_day_'.$configDay['day'].'.json';
+	$file = 'data_cache/'.Rules::$areaCode.'_A_day_'.$configDay['day'].'.json';
 	$clubs = $api->reportMultiClubsWithSort(Rules::$clubIds_A, $configDay['from'], $configDay['to'], $file);
 	$counter = count($clubs);
 	
 	
-	$prefixTable = "B";
-	$file = 'data_cache/'.$prefixTable.'_day_'.$configDay['day'].'.json';
+	$file = 'data_cache/'.Rules::$areaCode.'_B_day_'.$configDay['day'].'.json';
 	$clubs = array_merge($api->reportMultiClubsWithSort(Rules::$clubIds_B, $configDay['from'], $configDay['to'], $file), $clubs);
 	$counter = count($clubs);
 	
@@ -333,7 +331,7 @@ Rules::createRuleHN();
 	
 	usort($totalAthletes, array("StravaApi", "distCompareObject"));
 	// print_r(json_encode($totalAthletes));
-	file_put_contents("data_cache/".Rules::$areaCode."total_ranking.json", json_encode($totalAthletes));
+	file_put_contents("data_cache/".Rules::$areaCode."_total_ranking.json", json_encode($totalAthletes));
 ?>
 
 <!DOCTYPE html>
