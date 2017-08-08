@@ -753,7 +753,7 @@ class Rules{
 	);
 	}
 	
-	public static $idAthleteA=array(
+	public static $idGSTAthleteA=array(
 	20488525,
 	20924786,
 	20167806,
@@ -781,7 +781,7 @@ class Rules{
 	23549705,
 	);
 	
-	public static $idAthleteB=array(
+	public static $idGSTAthleteB=array(
 	18443907,
 	18750881,
 	20527828,

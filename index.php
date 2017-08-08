@@ -225,7 +225,7 @@ Rules::createRuleHN();
 		$fileName = "data_cache/GST_A_day_".$configDay['day'].".json";
 		file_put_contents($fileName, "");
 		$countLine = 0;
-		foreach (Rules::$idAthleteA as &$idA)
+		foreach (Rules::$idGSTAthleteA as &$idA)
 		{
 			for($n = 0; $n < $counter; $n++)
 			{
@@ -252,7 +252,7 @@ Rules::createRuleHN();
 		$fileName = "data_cache/GST_B_day_".$configDay['day'].".json";
 		file_put_contents($fileName , "");
 		$countLine = 0;
-		foreach (Rules::$idAthleteB as &$idB)
+		foreach (Rules::$idGSTAthleteB as &$idB)
 		{
 			for($n = 0; $n < $counter; $n++)
 			{
