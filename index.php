@@ -6,10 +6,21 @@ ini_set('max_execution_time', 6000); //300 seconds = 5 minutes
 include_once('StravaApi.php');
 // $api = new StravaApi("c56d24c43d4aaa704670521c6e31b09e655a42de"); //access token of buhu
 // $api = new StravaApi("fd76e56b9f860e40486315f4043298a266968a52"); //access token of Nice
-$api = new StravaApi("c138b46d4d1d1d27d0df268499ef0a3dbedfeb0e"); //access token of BTC UpRace HCM
-Rules::createRuleHCM();
-// $api = new StravaApi("aab65002d2b37ec719b3f7191fb77599183b6f88"); //access token of BTC UpRace HN
-// Rules::createRuleHN();
+if($_GET['area'] == "hcm")
+{
+	$api = new StravaApi("c138b46d4d1d1d27d0df268499ef0a3dbedfeb0e"); //access token of BTC UpRace HCM
+	Rules::createRuleHCM();
+}else if($_GET['area'] == "hn")
+{
+	$api = new StravaApi("aab65002d2b37ec719b3f7191fb77599183b6f88"); //access token of BTC UpRace HN
+	Rules::createRuleHN();
+}else
+{
+	echo "where are you from";
+	exit();
+}
+
+Rules::$currentDay = $_GET['day'];
 	//////////////////////////// Find Athlete ////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////
 	// $athlete =$api->getCurrentAthlete("16397134");

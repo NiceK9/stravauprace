@@ -29,7 +29,7 @@ class Rules{
 		Rules::$MIN_DISTANCE = 0; // 1000m for HCM
 		Rules::$BAN_TREADMILL = true; // false for HCM
 		
-		Rules::$currentDay = 5;
+		Rules::$currentDay = 6;
 		Rules::$configDays = array(
 			array(),
 			array("day"=>"1","from"=>"2017-08-3 00:00:00","to"=>"2017-08-3 23:59:59"),
