@@ -168,46 +168,6 @@ Rules::createRuleHN();
 		// echo (" ****************************************************** <br>");
 	// }
 	//Display UI all score
-	$clubIds = array(
-	// 298988 //LienQuan GST
-	// ,296230 //Run2Dead
-	// ,298756 //Run2Dead
-	// ,288686 //Gia Dinh
-	// 230974 // VNG Run Club
-	// ,163276 // SRC
-	// ,193097 // YCB
-	
-	// group of HCM
-	// 295557,
-	// 295587,
-	// 297405,
-	// 297386,
-	// 299848,
-	// 299859,
-	// 300344,
-	// 299571,
-	// 301338
-	
-	//group of HN
-	300411, //Start HN
-	301318, //Fast And Furious 9
-	300383, //Biệt đội "."
-    299042, //SunMoon
-	301102, //Ban "Cờ - him"
-	299004, //Team Rồng
-	301591, //Tia chớp
-	301264, //ÂM THỊNH
-	300407, //Đôi cánh thiên thần 
-	300091, //Lộn cái bàn
-	300410, //GSN.Young
-	300382, //ZSL - Super girl
-	301784, //Meow Meow
-	301778, //Kiểu gì cũng về đích
-	300385, //Pikachu
-	301533, //Chạy everywhere
-	301815, //Lết
-	
-	);
 	
 	$configDay = Rules::$configDays[Rules::$currentDay];
 	$prefixTable = "A";	
@@ -256,16 +216,72 @@ Rules::createRuleHN();
 			{ 
 				$content = ("[".$athlete["id"] . "] " . $athlete["name"]. " run " . $athlete["distance"] . "(km)<br>");
 				echo $content;
-			}		
-			
-
+			}	
+		}
+	}
+	
+	if(Rules::$areaCode == "HCM")
+	{
+		$fileName = "data_cache/GST_A_day_".$configDay['day'].".json";
+		file_put_contents($fileName, "");
+		$countLine = 0;
+		foreach (Rules::$idAthleteA as &$idA)
+		{
+			for($n = 0; $n < $counter; $n++)
+			{
+				$clubInfo = $clubs[$n];
+				
+				if($clubInfo!=null)
+				{
+					$athletes = $clubInfo->athletes;
+					foreach ($athletes as &$athlete)
+					{
+						// echo ($athlete["id"]. " compare ". (string)$idA."</br>");
+						if($athlete["id"] == (string)$idA)
+						{
+							$content = $athlete["id"] . " " . $athlete["distance"] . " \n";
+							file_put_contents($fileName, $content, FILE_APPEND | LOCK_EX);
+							$countLine++;
+							if(($countLine%5)==0)
+								file_put_contents($fileName, "\n", FILE_APPEND | LOCK_EX);
+						}	
+					}	
+				}
+			}
+		}
+		$fileName = "data_cache/GST_B_day_".$configDay['day'].".json";
+		file_put_contents($fileName , "");
+		$countLine = 0;
+		foreach (Rules::$idAthleteB as &$idB)
+		{
+			for($n = 0; $n < $counter; $n++)
+			{
+				$clubInfo = $clubs[$n];
+				
+				if($clubInfo!=null)
+				{
+					$athletes = $clubInfo->athletes;
+					foreach ($athletes as &$athlete)
+					{
+						// echo ($athlete["id"]. " compare ". (string)$idB."</br>");
+						if($athlete["id"] == (string)$idB)
+						{
+							$content = $athlete["id"] . " " . $athlete["distance"] . " \n";
+							file_put_contents($fileName, $content, FILE_APPEND | LOCK_EX);
+							$countLine++;
+							if(($countLine%10)==0)
+								file_put_contents($fileName, "\n", FILE_APPEND | LOCK_EX);
+						}	
+					}	
+				}
+			}
 		}
 	}
 		
 	$totalAthletes = array();
 	for($d = 1; $d <= 12; $d++)
 	{
-		$filename = 'data_cache/A_day_'.$d.".json";
+		$filename = 'data_cache/'.Rules::$areaCode.'_A_day_'.$d.".json";
 		if (file_exists($filename)) 
 		{
 			$records = json_decode(file_get_contents($filename));
@@ -289,7 +305,7 @@ Rules::createRuleHN();
 				}
 			}
 		}
-		$filename = 'data_cache/B_day_'.$d.".json";
+		$filename = 'data_cache/'.Rules::$areaCode.'_B_day_'.$d.".json";
 		if (file_exists($filename)) 
 		{
 			$records = json_decode(file_get_contents($filename));
@@ -317,7 +333,7 @@ Rules::createRuleHN();
 	
 	usort($totalAthletes, array("StravaApi", "distCompareObject"));
 	// print_r(json_encode($totalAthletes));
-	file_put_contents("data_cache/total_ranking.json", json_encode($totalAthletes));
+	file_put_contents("data_cache/".Rules::$areaCode."total_ranking.json", json_encode($totalAthletes));
 ?>
 
 <!DOCTYPE html>
