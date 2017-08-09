@@ -955,7 +955,7 @@
 }, {
     "id": 301264,
     "name": "\u00c2M TH\u1ecaNH",
-    "totalDistance": 7.970000000000001,
+    "totalDistance": 7.234800000000001,
     "totalMembers": 11,
     "activities": [{
         "Id": 1116909780,
@@ -983,7 +983,7 @@
         "duration": "2:57",
         "startTime": "2017-08-04 18:46:26",
         "avgPace": "8:01",
-        "isValid": true,
+        "isValid": false,
         "isPowerX2": true,
         "isTreadMill": false,
         "photoCount": 0
@@ -1245,8 +1245,8 @@
         "friend": "accepted",
         "follower": null,
         "name": "Vo Nhung",
-        "oridistance": 0.36760000000000004,
-        "distance": 0.7352000000000001,
+        "oridistance": 0,
+        "distance": 0,
         "isspy": 0
     }, {
         "id": 23570019,

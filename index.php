@@ -21,6 +21,49 @@ if($_GET['area'] == "hcm")
 }
 
 Rules::$currentDay = $_GET['day'];
+
+
+//remove all workout of 1 athlete
+// $banId = "23876865";
+// $clubId = 0;
+// for($d = 1; $d <= 12; $d++)
+// {
+	// $filename = 'data_cache/'.Rules::$areaCode.'_B_day_'.$d.".json";
+	// $clubs = json_decode(file_get_contents($filename));
+	// $oridistance=0;
+	// $distance=0;
+	// foreach ($clubs as &$club)
+	// {	
+		// foreach ($club->activities as &$activity)
+		// {	
+			// if ($activity->athleteId == $banId) {
+				// $activity->isValid = false;			
+				// echo ("Set Activity ".$activity->Id." = 0 </br>");
+			// }
+		// }
+		// foreach ($club->athletes as &$athlete)
+		// {	
+			// if ($athlete->id == $banId) {
+				// $oridistance += $athlete->oridistance;
+				// $distance += $athlete->distance;
+				// $athlete->oridistance = 0;
+				// $athlete->distance = 0;
+				// $clubId = $club->id;
+				// break;
+			// }
+		// }
+	// }
+	// foreach ($clubs as &$club)
+	// {	
+		// if ($club->id == $clubId) {
+			// $club->totalDistance -= $distance;
+			// break;
+		// }
+	// }
+	// file_put_contents($filename, json_encode($clubs));
+// }
+// exit("done");
+
 	//////////////////////////// Find Athlete ////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////
 	// $athlete =$api->getCurrentAthlete("16397134");
