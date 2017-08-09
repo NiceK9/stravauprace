@@ -343,6 +343,7 @@ Rules::$currentDay = $_GET['day'];
 	usort($totalAthletes, array("StravaApi", "distCompareObject"));
 	// print_r(json_encode($totalAthletes));
 	file_put_contents("data_cache/".Rules::$areaCode."_total_ranking.json", json_encode($totalAthletes));
+	file_put_contents("data_cache/ban_list.json", json_encode(Rules::$BAN_ID_ATHLETE));
 ?>
 
 <!DOCTYPE html>

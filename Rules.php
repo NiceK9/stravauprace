@@ -20,6 +20,7 @@ class Rules{
 	public static $areaCode = "ABC";
 	public static $currentDay = 0;
 
+	public static $BAN_ID_ATHLETE = array("23876865");
 
 	public static function createRuleHN()
 	{		
