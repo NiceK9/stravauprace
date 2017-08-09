@@ -854,6 +854,7 @@ class Rules{
 "23855166",
 "23851643",
 "23501703",
+"23122370"
 		);
 			
 	Rules::$clubIds_A = array(	//5 nguoi	
