@@ -132,7 +132,7 @@ class StravaApi{
 					
 					$tmpActivity->startTime = $strDate;
 					$tmpActivity->avgPace = StravaApi::convertSpeedToPace($activities[$i]['average_speed']);
-					if($avgSecondToRun>= $minSeconds && $avgSecondToRun <= $maxSeconds && $activities[$i]['distance'] >= Rules::$MIN_DISTANCE){
+					if($avgSecondToRun>= $minSeconds && $avgSecondToRun <= $maxSeconds && $activities[$i]['distance'] >= Rules::$MIN_DISTANCE && !StravaApi::in_array_r($tmpActivity->athleteId, Rules::$BAN_ID_ATHLETE)){
 						$tmpActivity->isValid = true;
 						$isDistX2 = $this->isDatetimeValidInArray(Rules::$DATE_THEWORLD_X2, $activityDate) || (Rules::$IS_FEMALE_X2_DISTANCE && StravaApi::in_array_r($tmpActivity->athleteId, Rules::$FEMALE_IDS));
 						if($isDistX2){
