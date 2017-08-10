@@ -96,10 +96,10 @@ Rules::$currentDay = $_GET['day'];
 				// {
 					// if(!StravaApi::in_array_r($athletes[$j]["id"], Rules::$SPY_IDS))
 					// {
-						// if(in_array((int)$athletes[$j]["id"], Rules::$ID_ATHLETES))
+						// if(StravaApi::in_array_r($athletes[$j]["id"], Rules::$ID_ATHLETES))
 						// {							
 							// echo("[VALID]".$athletes[$j]["id"]."</br>");
-							// array_splice(Rules::$ID_ATHLETES, array_search((int)$athletes[$j]["id"], Rules::$ID_ATHLETES), 1);
+							// array_splice(Rules::$ID_ATHLETES, StravaApi::in_array_r($athletes[$j]["id"], Rules::$ID_ATHLETES), 1);
 							
 						// }	
 						// else{
@@ -169,8 +169,8 @@ Rules::$currentDay = $_GET['day'];
 	
 	///////////////////////////// Find Club's Total distance /////////////////////
 	//////////////////////////////////////////////////////////////////////////////
-	// $clubId = 298988; // LienQuan GST
-	// $clubInfo =$api->getClubTotalDistance($clubId, "2017-08-3 00:00:00", "2017-08-3 23:59:59");
+	// $clubId = 294773; // LienQuan GST
+	// $clubInfo =$api->getClubTotalDistance($clubId, "2017-08-10 00:00:00", "2017-08-10 23:59:59");
 	// if($clubInfo!=null)
 	// {
 		// echo ("Club " . $clubInfo->name . "<br>");

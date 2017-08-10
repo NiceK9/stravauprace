@@ -250,7 +250,7 @@ class StravaApi{
 					$tmpActivity->photoCount = $activities[$i]['total_photo_count'];
 					$validTreadMill = $tmpActivity->photoCount >= Rules::$PHOTO_REQUIRE_TREADMILL;
 					
-					if($avgSecondToRun>= $minSeconds && $avgSecondToRun <= $maxSeconds && $activities[$i]['distance'] >= Rules::$MIN_DISTANCE && !StravaApi::in_array_r($tmpActivity->athleteId, Rules::$BAN_ID_ATHLETE) && array_search((int)($tmpActivity->athleteId), Rules::$ID_ATHLETES)){
+					if($avgSecondToRun>= $minSeconds && $avgSecondToRun <= $maxSeconds && $activities[$i]['distance'] >= Rules::$MIN_DISTANCE && !StravaApi::in_array_r($tmpActivity->athleteId, Rules::$BAN_ID_ATHLETE) && StravaApi::in_array_r($tmpActivity->athleteId, Rules::$ID_ATHLETES)){
 						if($isTreadMill && (Rules::$BAN_TREADMILL == true || !$validTreadMill))
 							$tmpActivity->isValid = false;
 						else
@@ -273,8 +273,15 @@ class StravaApi{
 							}
 						}
 					}
-					else
+					else{
+						// echo "cond 1 ".($avgSecondToRun>= $minSeconds)."</br>";
+						// echo "cond 2 ".($avgSecondToRun <= $maxSeconds)."</br>";
+						// echo "cond 3 ".($activities[$i]['distance'] >= Rules::$MIN_DISTANCE)."</br>";
+						// echo "cond 4 ".(!StravaApi::in_array_r($tmpActivity->athleteId, Rules::$BAN_ID_ATHLETE))."</br>";
+						// echo "cond 5 ".(StravaApi::in_array_r($tmpActivity->athleteId, Rules::$ID_ATHLETES))."</br>";
+						// echo "athlete id ".$tmpActivity->athleteId."</br>";
 						$tmpActivity->isValid = false;
+					}
 					$clubInfos->activities[$idx++] = $tmpActivity;
 				 }
 			}				
