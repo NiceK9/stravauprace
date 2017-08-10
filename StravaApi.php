@@ -218,11 +218,11 @@ class StravaApi{
 					continue;
 				}
 				
-				$strDate = $activities[$i]['start_date'];
-				// $strDate = $activities[$i]['start_date_local'];
+				// $strDate = $activities[$i]['start_date'];
+				$strDate = $activities[$i]['start_date_local'];
 				$strDate = str_replace("T", " ", $strDate);
 				$strDate = str_replace("Z", "", $strDate);
-				$activityDate = DateTime::createFromFormat(TIME_FORMAT, $strDate);
+				$activityDate = DateTime::createFromFormat(TIME_FORMAT, $strDate, new DateTimeZone($activities[$i]['timezone']));
 				$activityDate->setTimezone(new DateTimeZone('Asia/Ho_Chi_Minh')); //convert GMT +7
 				$strDate = $activityDate->format(TIME_FORMAT);
 				
