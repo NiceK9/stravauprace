@@ -181,6 +181,11 @@ class StravaApi{
 			$athletes[$i]["oridistance"] = 0;
 			$athletes[$i]["distance"] = 0;
 			$athletes[$i]["isspy"] = StravaApi::in_array_r($athletes[$i]['id'], Rules::$SPY_IDS);
+			$athletes[$i]["isspy"] = StravaApi::in_array_r($athletes[$i]['id'], Rules::$SPY_IDS);					
+			if(StravaApi::in_array_r((string)$athletes[$i]['id'], Rules::$FEMALE_IDS))					
+				$athletes[$i]["sex"] = "F";
+			else
+				$athletes[$i]["sex"] = "M";
 			$clubInfos->athletes[$athletes[$i]["id"]] = $athletes[$i];
 		}
 
@@ -248,7 +253,7 @@ class StravaApi{
 					$isTreadMill = $activities[$i]["manual"];
 					$tmpActivity->isTreadMill = $isTreadMill;
 					$tmpActivity->photoCount = $activities[$i]['total_photo_count'];
-					$validTreadMill = $tmpActivity->photoCount >= Rules::$PHOTO_REQUIRE_TREADMILL;
+					$validTreadMill = $tmpActivity->photoCount >= Rules::$PHOTO_REQUIRE_TREADMILL;		
 					
 					if($avgSecondToRun>= $minSeconds && $avgSecondToRun <= $maxSeconds && $activities[$i]['distance'] >= Rules::$MIN_DISTANCE && !StravaApi::in_array_r($tmpActivity->athleteId, Rules::$BAN_ID_ATHLETE) && StravaApi::in_array_r($tmpActivity->athleteId, Rules::$ID_ATHLETES)){
 						if($isTreadMill && (Rules::$BAN_TREADMILL == true || !$validTreadMill))
@@ -261,14 +266,12 @@ class StravaApi{
 								$clubInfos->totalDistance += $activities[$i]['distance']*2/1000;
 								$clubInfos->athletes[$activities[$i]['athlete']['id']]["oridistance"] += $activities[$i]['distance']/1000;
 								$clubInfos->athletes[$activities[$i]['athlete']['id']]["distance"] += ($activities[$i]['distance']*2)/1000;
-								$clubInfos->athletes[$activities[$i]['athlete']['id']]["sex"] = "F";
 								$tmpActivity->isPowerX2 = true;
 							}
 							else{
 								$clubInfos->totalDistance += $activities[$i]['distance']/1000;
 								$clubInfos->athletes[$activities[$i]['athlete']['id']]["oridistance"] += $activities[$i]['distance']/1000;
 								$clubInfos->athletes[$activities[$i]['athlete']['id']]["distance"] += $activities[$i]['distance']/1000;
-								$clubInfos->athletes[$activities[$i]['athlete']['id']]["sex"] = "M";
 								$tmpActivity->isPowerX2 = false;
 							}
 						}
