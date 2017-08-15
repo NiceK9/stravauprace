@@ -1025,6 +1025,28 @@
         "distance": 0,
         "isspy": 0
     }, {
+        "id": 24004348,
+        "username": null,
+        "resource_state": 2,
+        "firstname": "Bui",
+        "lastname": "Van",
+        "city": null,
+        "state": null,
+        "country": null,
+        "sex": "F",
+        "premium": false,
+        "created_at": "2017-08-07T09:17:55Z",
+        "updated_at": "2017-08-07T09:18:15Z",
+        "badge_type_id": 0,
+        "profile_medium": "https:\/\/graph.facebook.com\/1575527715802542\/picture?height=256&width=256",
+        "profile": "https:\/\/graph.facebook.com\/1575527715802542\/picture?height=256&width=256",
+        "friend": null,
+        "follower": null,
+        "name": "Bui Van",
+        "oridistance": 0,
+        "distance": 0,
+        "isspy": 0
+    }, {
         "id": 23728767,
         "username": "ng_trang",
         "resource_state": 2,
