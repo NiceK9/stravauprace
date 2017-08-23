@@ -897,8 +897,8 @@
     "friend": null,
     "follower": "accepted",
     "name": "Harry Hieu Tran",
-    "oridistance": 158.3107,
-    "distance": 210.9107,
+    "oridistance": 163.5051,
+    "distance": 216.1051,
     "isspy": 0
 }, {
     "id": 18510791,
@@ -11105,8 +11105,8 @@
     "friend": "accepted",
     "follower": null,
     "name": "Minh Chi Nguyen",
-    "oridistance": 3.6448,
-    "distance": 3.6448,
+    "oridistance": 9.4448,
+    "distance": 9.4448,
     "isspy": 0
 }, {
     "id": 23496424,
@@ -11216,8 +11216,8 @@
     "friend": null,
     "follower": null,
     "name": "Nh\u01b0 L\u00ea",
-    "oridistance": 0,
-    "distance": 0,
+    "oridistance": 10.4,
+    "distance": 10.4,
     "isspy": 0
 }, {
     "id": 23676435,

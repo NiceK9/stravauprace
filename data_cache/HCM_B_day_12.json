@@ -2819,7 +2819,7 @@
 }, {
     "id": 296844,
     "name": "Ch\u1ea1y V\u00ec K\u00e8o Th\u01a1m",
-    "totalDistance": 79.2764,
+    "totalDistance": 85.0764,
     "totalMembers": 11,
     "activities": [{
         "Id": 1144694417,
@@ -3034,8 +3034,8 @@
         "friend": "accepted",
         "follower": null,
         "name": "Minh Chi Nguyen",
-        "oridistance": 0,
-        "distance": 0,
+        "oridistance": 5.8,
+        "distance": 5.8,
         "isspy": 0
     }, {
         "id": 23170575,
@@ -9895,7 +9895,7 @@
 }, {
     "id": 299862,
     "name": "GST KMF -  Run For Health",
-    "totalDistance": 5.389,
+    "totalDistance": 10.5834,
     "totalMembers": 11,
     "activities": [{
         "Id": 1144517338,
@@ -9923,7 +9923,7 @@
         "duration": "60:51",
         "startTime": "2017-08-21 17:41:43",
         "avgPace": "11:42",
-        "isValid": false,
+        "isValid": true,
         "isPowerX2": null,
         "isTreadMill": false,
         "photoCount": 0
@@ -10036,8 +10036,8 @@
         "friend": null,
         "follower": "accepted",
         "name": "Harry Hieu Tran",
-        "oridistance": 0,
-        "distance": 0,
+        "oridistance": 5.1944,
+        "distance": 5.1944,
         "isspy": 0
     }, {
         "id": 20022091,
@@ -13289,7 +13289,7 @@
 }, {
     "id": 298251,
     "name": "PY AHIHI",
-    "totalDistance": 0,
+    "totalDistance": 10.4,
     "totalMembers": 11,
     "activities": [],
     "athletes": [{
@@ -13422,8 +13422,8 @@
         "friend": null,
         "follower": null,
         "name": "Nh\u01b0 L\u00ea",
-        "oridistance": 0,
-        "distance": 0,
+        "oridistance": 5.2,
+        "distance": 10.4,
         "isspy": 0
     }, {
         "id": 23501703,
