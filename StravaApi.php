@@ -47,6 +47,16 @@ class StravaApi{
 		return $this->client->getAthlete($id);
 	}
 	
+	public function getAthleteActivities($before = null, $after = null, $page = null, $per_page = null)
+	{
+		return $this->client->getAthleteActivities($before, $after, $page, $per_page);
+	}
+	
+	public function getActivity($id)
+	{
+		return $this->client->getActivity($id);
+	}
+	
 	public function getAthleteClubs($id = null)
 	{
 		$athlete = $this->client->getAthlete($id);

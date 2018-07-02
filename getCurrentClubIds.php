@@ -8,13 +8,15 @@ use Strava\API\Exception;
 use Strava\API\Service\REST;
 use Strava\API\OAuth;
 
-define("GETCLUB_URL", 'http://localhost/myprojects/strava/getCurrentClubIds.php');
+define("GETCLUB_URL", 'http://localhost/stravauprace/getCurrentClubIds.php');
 //define("GETCLUB_URL", 'http://static.deadtarget.info/Utils/strava/getCurrentClubIds.php');
 
 try {
     $options = array(
-        'clientId'     => 19157,
-        'clientSecret' => 'b228db055030c46916eb737892d27e00abf597d5',
+        // 'clientId'     => 19157,
+        // 'clientSecret' => 'b228db055030c46916eb737892d27e00abf597d5',
+        'clientId'     => 26496,
+        'clientSecret' => '06db3de6b974347549b2d27e3c4794dd05e3f811',
         'redirectUri'  => GETCLUB_URL
     );
     $oauth = new OAuth($options);
