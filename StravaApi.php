@@ -47,311 +47,50 @@ class StravaApi{
 		return $this->client->getAthlete($id);
 	}
 	
-	public function getAthleteActivities($before = null, $after = null, $page = null, $per_page = null)
-	{
-		return $this->client->getAthleteActivities($before, $after, $page, $per_page);
-	}
 	
 	public function getActivity($id)
 	{
 		return $this->client->getActivity($id);
 	}
 	
-	public function getAthleteClubs($id = null)
+	public function fetchActivity($id, $fromDate, $toDate)
 	{
-		$athlete = $this->client->getAthlete($id);
-		if($athlete != null)
-		{
-			return $athlete["clubs"];
-		}
-		return null;
-	}
-	
-	public function getClub($clubId)
-	{
-		return $this->client->getClub($clubId);
-	}
-	
-	public function getClubMembers($clubId)
-	{
-		return $this->client->getClubMembers($clubId);
-	}
-	
-	public function getClubRawActivities($clubId)
-	{
-		return $this->client->getClubActivities($clubId);
-	}
-	
-	public function getClubActivitiesWithFilter($clubId, $onDateStr)
-	{
-		$clubInfos = new Club();
-		$clubInfos->activities = array();
-		$clubInfos->totalDistance = 0;
-		$activities = $this->client->getClubActivities($clubId, 1, 200);	
-		$club = $this->client->getClub($clubId);
-		$clubInfos->name = $club["name"];
-		$clubInfos->totalMembers = $club["member_count"];
-		$clubInfos->isSpyExist = false;
-		$clubInfos->spyList = array();
-		$counter = count($activities);
-		$clubInfos->totalActivitiesCounter  = $counter;
-		if($counter>0)
-		{
-			$inputDate = DateTime::createFromFormat(TIME_INPUT_FORMAT, $onDateStr);
-			$minPaceArrs = explode(":", Rules::$MIN_PACE);
-			$maxPaceArrs = explode(":", Rules::$MAX_PACE);
-			$minSeconds = ($minPaceArrs[0]*60 + (count($minPaceArrs)>1?$minPaceArrs[1]:0));
-			$maxSeconds = ($maxPaceArrs[0]*60 + (count($maxPaceArrs)>1?$maxPaceArrs[1]:0));
-			$idx = 0;
-			$spyCounter = 0;
-			for($i = 0; $i < $counter; $i++)
-			{
-				if(StravaApi::in_array_r($activities[$i]['athlete']['id'], Rules::$SPY_IDS))
-				{
-					$athleteName = $activities[$i]['athlete']['firstname'] . " " . $activities[$i]['athlete']['lastname'];
-					if(!$clubInfos->isSpyExist){
-						$clubInfos->isSpyExist = true;
-						$clubInfos->spyList[$spyCounter++] = $athleteName;
-					}
-					else {
-						
-						if(!StravaApi::in_array_r($athleteName, $clubInfos->spyList))
-							$clubInfos->spyList[$spyCounter++] = $athleteName;
-					}
-					continue;
-				}
-				
-				$strDate = $activities[$i]['start_date'];
-				// $strDate = $activities[$i]['start_date_local'];
-				$strDate = str_replace("T", " ", $strDate);
-				$strDate = str_replace("Z", "", $strDate);
-				$activityDate = DateTime::createFromFormat(TIME_FORMAT, $strDate);
-				$activityDate->setTimezone(new DateTimeZone('Asia/Ho_Chi_Minh')); //convert GMT +7
-				$strDate = $activityDate->format('Y-m-d H:i:s');
-				$avgSecondToRun = StravaApi::speed_SecondsPerKm($activities[$i]['average_speed']);
-				if($inputDate->format('Y-m-d') === $activityDate->format('Y-m-d') 	 
-				 && strcmp($activities[$i]['type'], "Run")==0)
-				 {
-					$tmpActivity = new Activity();
-					$tmpActivity->Id = $activities[$i]['id'];
-					$tmpActivity->athleteId = $activities[$i]['athlete']['id'];
-					$tmpActivity->athleteName = $activities[$i]['athlete']['firstname'] . " " . $activities[$i]['athlete']['lastname'];
-					$tmpActivity->type = $activities[$i]['type'];
-					$tmpActivity->distance = ($activities[$i]['distance']/1000);
-					$tmpActivity->duration = StravaApi::secondToStr($activities[$i]['moving_time']);
-					
-					$tmpActivity->startTime = $strDate;
-					$tmpActivity->avgPace = StravaApi::convertSpeedToPace($activities[$i]['average_speed']);
-					if($avgSecondToRun>= $minSeconds && $avgSecondToRun <= $maxSeconds && $activities[$i]['distance'] >= Rules::$MIN_DISTANCE){
-						$tmpActivity->isValid = true;
-						$isDistX2 = $this->isDatetimeValidInArray(Rules::$DATE_THEWORLD_X2, $activityDate) || (Rules::$IS_FEMALE_X2_DISTANCE && StravaApi::in_array_r($tmpActivity->athleteId, Rules::$FEMALE_IDS));
-						if($isDistX2){
-							$clubInfos->totalDistance += $activities[$i]['distance']*2;
-							$tmpActivity->bonusDistance = ($activities[$i]['distance']/1000);
-							$tmpActivity->isPowerX2 = true;
-						}
-						else{
-							$clubInfos->totalDistance += $activities[$i]['distance'];
-							$tmpActivity->bonusDistance = 0;
-							$tmpActivity->isPowerX2 = false;
-						}
-					}
-					else
-						$tmpActivity->isValid = false;
-					
-					$clubInfos->activities[$idx++] = $tmpActivity;
-				 }
-			}				
-		}
+		$activity = $this->client->getActivity($id);
 		
-		return $clubInfos;
-	}
-	
-	public function getClubTotalDistance($clubId, $fromDate, $toDate)
-	{
-		$clubInfos = new Club();
-		$clubInfos->totalDistance = 0;
-		// Debug detail
+		$inputDateFrom = DateTime::createFromFormat(TIME_FORMAT, $fromDate, new DateTimeZone(TIME_ZONE));
+		$inputDateTo = DateTime::createFromFormat(TIME_FORMAT, $toDate, new DateTimeZone(TIME_ZONE));
+		$minPaceArrs = explode(":", Rules::$MIN_PACE);
+		$maxPaceArrs = explode(":", Rules::$MAX_PACE);
+		$minSeconds = ($minPaceArrs[0]*60 + (count($minPaceArrs)>1?$minPaceArrs[1]:0));
+		$maxSeconds = ($maxPaceArrs[0]*60 + (count($maxPaceArrs)>1?$maxPaceArrs[1]:0));
+			
+		// $strDate = $activity['start_date'];
+		$strDate = $activity['start_date_local'];
+		$strDate = str_replace("T", " ", $strDate);
+		$strDate = str_replace("Z", "", $strDate);
+		$activityDate = DateTime::createFromFormat(TIME_FORMAT, $strDate, new DateTimeZone($activity['timezone']));
+		$activityDate->setTimezone(new DateTimeZone('Asia/Ho_Chi_Minh')); //convert GMT +7
+		$strDate = $activityDate->format(TIME_FORMAT);
+		
+		$avgSecondToRun = StravaApi::speed_SecondsPerKm($activity['average_speed']);
+		$isValid = $activityDate >= $inputDateFrom && $activityDate <= $inputDateTo 
+			&& strcmp($activity['type'], "Run")==0 
+			&& $avgSecondToRun >= $minSeconds 
+			&& $avgSecondToRun <= $maxSeconds 
+			&& $activity['distance'] >= Rules::$MIN_DISTANCE;
 
-		$clubInfos->activities = array();
-		$activities = $this->client->getClubActivities($clubId, 1, 200);		
-		// print_r(json_encode($activities));
+		$tmpActivity = new Activity();
+		$tmpActivity->Id = $activity['id'];
+		$tmpActivity->athleteId = $activity['athlete']['id'];
+		$tmpActivity->type = $activity['type'];
+		$tmpActivity->distance = ($activity['distance']/1000);
+		$tmpActivity->duration = StravaApi::secondToStr($activity['moving_time']);
 		
-		$athletes =	$this->client->getClubMembers($clubId, 1, 200);
-		
-		$club = $this->client->getClub($clubId);
-		$clubInfos->id = $club["id"];
-		$clubInfos->name = $club["name"];
-		$clubInfos->totalMembers = $club["member_count"];
-		
-		$clubInfos->athletes = array();
-		for($i = 0; $i < count($athletes); $i++)
-		{
-			$athletes[$i]["name"] = $athletes[$i]['firstname'] . " " . $athletes[$i]['lastname'];
-			$athletes[$i]["oridistance"] = 0;
-			$athletes[$i]["distance"] = 0;
-			$athletes[$i]["isspy"] = StravaApi::in_array_r($athletes[$i]['id'], Rules::$SPY_IDS);
-			$athletes[$i]["isspy"] = StravaApi::in_array_r($athletes[$i]['id'], Rules::$SPY_IDS);					
-			if(StravaApi::in_array_r((string)$athletes[$i]['id'], Rules::$FEMALE_IDS))					
-				$athletes[$i]["sex"] = "F";
-			else
-				$athletes[$i]["sex"] = "M";
-			$clubInfos->athletes[$athletes[$i]["id"]] = $athletes[$i];
-		}
+		$tmpActivity->startTime = $strDate;
+		$tmpActivity->avgPace = StravaApi::convertSpeedToPace($activity['average_speed']);
+		$tmpActivity->isValid = $isValid;
 
-		$clubInfos->isSpyExist = false;
-		$clubInfos->spyList = array();
-		
-		$counter = count($activities);
-		$clubInfos->totalActivitiesCounter  = $counter;
-		// log_debug("count act: ".$counter);
-		if($counter>0)
-		{
-			$inputDateFrom = DateTime::createFromFormat(TIME_FORMAT, $fromDate, new DateTimeZone(TIME_ZONE));
-			$inputDateTo = DateTime::createFromFormat(TIME_FORMAT, $toDate, new DateTimeZone(TIME_ZONE));
-			$minPaceArrs = explode(":", Rules::$MIN_PACE);
-			$maxPaceArrs = explode(":", Rules::$MAX_PACE);
-			$minSeconds = ($minPaceArrs[0]*60 + (count($minPaceArrs)>1?$minPaceArrs[1]:0));
-			$maxSeconds = ($maxPaceArrs[0]*60 + (count($maxPaceArrs)>1?$maxPaceArrs[1]:0));
-			$idx = 0;
-			$spyCounter = 0;
-			for($i = 0; $i < $counter; $i++)
-			{				
-				// log_debug("checking act: ".$counter);
-				if(StravaApi::in_array_r($activities[$i]['athlete']['id'], Rules::$SPY_IDS))
-				{
-					$athleteName = $activities[$i]['athlete']['firstname'] . " " . $activities[$i]['athlete']['lastname'];
-					if(!$clubInfos->isSpyExist){
-						$clubInfos->isSpyExist = true;
-						$clubInfos->spyList[$spyCounter++] = $athleteName;
-					}
-					else {
-						
-						if(!StravaApi::in_array_r($athleteName, $clubInfos->spyList))
-							$clubInfos->spyList[$spyCounter++] = $athleteName;
-					}
-					continue;
-				}
-				
-				// $strDate = $activities[$i]['start_date'];
-				$strDate = $activities[$i]['start_date_local'];
-				$strDate = str_replace("T", " ", $strDate);
-				$strDate = str_replace("Z", "", $strDate);
-				$activityDate = DateTime::createFromFormat(TIME_FORMAT, $strDate, new DateTimeZone($activities[$i]['timezone']));
-				$activityDate->setTimezone(new DateTimeZone('Asia/Ho_Chi_Minh')); //convert GMT +7
-				$strDate = $activityDate->format(TIME_FORMAT);
-				
-				// log_debug ($i." time ".($strDate)."</br>");
-				// log_debug ($i." condition 1 ".($fromDate)."</br>");
-				// log_debug ($i." condition 2 ".($toDate)."</br>");
-				// log_debug ($i." condition 3 ".($activities[$i]['type'])."</br>");
-				// log_debug ($i." condition 4 ".($activities[$i]['average_speed'])."</br>");
-				if($activityDate >= $inputDateFrom && $activityDate <= $inputDateTo && strcmp($activities[$i]['type'], "Run")==0 && $activities[$i]['average_speed'] > 0)
-				 {
-					$tmpActivity = new Activity();
-					$tmpActivity->Id = $activities[$i]['id'];
-					$tmpActivity->athleteId = $activities[$i]['athlete']['id'];
-					$tmpActivity->athleteName = $activities[$i]['athlete']['firstname'] . " " . $activities[$i]['athlete']['lastname'];
-					$tmpActivity->type = $activities[$i]['type'];
-					$tmpActivity->distance = ($activities[$i]['distance']/1000);
-					$tmpActivity->duration = StravaApi::secondToStr($activities[$i]['moving_time']);
-					
-					$tmpActivity->startTime = $strDate;
-					$tmpActivity->avgPace = StravaApi::convertSpeedToPace($activities[$i]['average_speed']);
-					$avgSecondToRun = StravaApi::speed_SecondsPerKm($activities[$i]['average_speed']);
-					
-					$isTreadMill = $activities[$i]["manual"];
-					$tmpActivity->isTreadMill = $isTreadMill;
-					$tmpActivity->photoCount = $activities[$i]['total_photo_count'];
-					$validTreadMill = $tmpActivity->photoCount >= Rules::$PHOTO_REQUIRE_TREADMILL;		
-					
-					if($avgSecondToRun>= $minSeconds && $avgSecondToRun <= $maxSeconds && $activities[$i]['distance'] >= Rules::$MIN_DISTANCE && !StravaApi::in_array_r($tmpActivity->athleteId, Rules::$BAN_ID_ATHLETE) && StravaApi::in_array_r($tmpActivity->athleteId, Rules::$ID_ATHLETES)){
-						if($isTreadMill && (Rules::$BAN_TREADMILL == true || !$validTreadMill))
-							$tmpActivity->isValid = false;
-						else
-						{
-							$tmpActivity->isValid = true;
-							$isDistX2 = $this->isDatetimeValidInArray(Rules::$DATE_THEWORLD_X2, $activityDate) || (Rules::$IS_FEMALE_X2_DISTANCE && StravaApi::in_array_r($activities[$i]['athlete']['id'], Rules::$FEMALE_IDS));
-							if($isDistX2){
-								$clubInfos->totalDistance += $activities[$i]['distance']*2/1000;
-								$clubInfos->athletes[$activities[$i]['athlete']['id']]["oridistance"] += $activities[$i]['distance']/1000;
-								$clubInfos->athletes[$activities[$i]['athlete']['id']]["distance"] += ($activities[$i]['distance']*2)/1000;
-								$tmpActivity->isPowerX2 = true;
-							}
-							else{
-								$clubInfos->totalDistance += $activities[$i]['distance']/1000;
-								$clubInfos->athletes[$activities[$i]['athlete']['id']]["oridistance"] += $activities[$i]['distance']/1000;
-								$clubInfos->athletes[$activities[$i]['athlete']['id']]["distance"] += $activities[$i]['distance']/1000;
-								$tmpActivity->isPowerX2 = false;
-							}
-						}
-					}
-					else{
-						// echo "cond 1 ".($avgSecondToRun>= $minSeconds)."</br>";
-						// echo "cond 2 ".($avgSecondToRun <= $maxSeconds)."</br>";
-						// echo "cond 3 ".($activities[$i]['distance'] >= Rules::$MIN_DISTANCE)."</br>";
-						// echo "cond 4 ".(!StravaApi::in_array_r($tmpActivity->athleteId, Rules::$BAN_ID_ATHLETE))."</br>";
-						// echo "cond 5 ".(StravaApi::in_array_r($tmpActivity->athleteId, Rules::$ID_ATHLETES))."</br>";
-						// echo "athlete id ".$tmpActivity->athleteId."</br>";
-						$tmpActivity->isValid = false;
-					}
-					$clubInfos->activities[$idx++] = $tmpActivity;
-				 }
-			}				
-		}		
-		
-		usort($clubInfos->athletes, array("StravaApi", "distCompare"));
-		
-		return $clubInfos;
-	}
-	
-	public function reportMultiClubsWithSort($clubIds, $fromDate, $toDate, $filename)
-	{
-		$clubs = array();
-		$counter = count($clubIds);
-		for($i = 0; $i < $counter; $i++)
-		{
-			log_debug($filename."---read club: ".$clubIds[$i]["name"]. " ".$i."/".$counter);
-			$clubs[$i] = $this->getClubTotalDistance($clubIds[$i], $fromDate, $toDate);
-		}
-		usort($clubs, array("StravaApi", "uCompare"));
-				
-		$current = json_encode($clubs);
-		file_put_contents($filename, $current);
-	
-		return $clubs;
-	}	
-	
-	static function makeTotalRanking($clubs)
-	{
-		$totalAthletes = array();
-		foreach ($clubs as &$club)
-		{ 		
-			$totalAthletes = array_merge($totalAthletes, $club->athletes);
-		}
-		usort($totalAthletes, array("StravaApi", "distCompare"));
-		return $totalAthletes;
-	}
-	
-	static function distCompare($athleteA, $athleteB)
-	{
-		if($athleteA["distance"] == $athleteB["distance"])
-			return 0;
-		return ($athleteA["distance"] > $athleteB["distance"] ? -1 : 1);
-	}
-	
-	static function distCompareObject($athleteA, $athleteB)
-	{
-		if($athleteA->distance == $athleteB->distance)
-			return 0;
-		return ($athleteA->distance > $athleteB->distance ? -1 : 1);
-	}
-	
-	static function uCompare($clubA, $clubB)
-	{
-		if($clubA->totalDistance == $clubB->totalDistance)
-			return 0;
-		return ($clubA->totalDistance > $clubB->totalDistance ? -1 : 1);
+		return $tmpActivity;
 	}
 	
 	//// Static functions ////
@@ -372,25 +111,6 @@ class StravaApi{
 	{
 		$secondsPerKm = StravaApi::speed_SecondsPerKm($speed);
 		return StravaApi::secondToStr($secondsPerKm);
-	}
-	
-	// $arrDateTimeStr: string array with datetime formated
-	// $myDateTime: datetime object
-	public static function isDatetimeValidInArray($arrDateTimeStr, $myDateTime)
-	{
-		if($arrDateTimeStr==null || count($arrDateTimeStr)==0)
-			return false;
-		for($i = 0; $i < count($arrDateTimeStr); $i++)
-		{
-			$tmpDate = DateTime::createFromFormat(TIME_INPUT_FORMAT, $arrDateTimeStr[$i]);
-			if($tmpDate->format('Y-m-d') === $myDateTime->format('Y-m-d'))
-				return true;
-		}
-		return false;
-	}
-	
-	public static function in_array_r($item , $array){
-		return preg_match('/"'.$item.'"/i' , json_encode($array));
 	}
 }
 ?>
