@@ -13,16 +13,16 @@ import java.text.SimpleDateFormat;
  * @author nice
  */
 public class DateTimeUtils {
-    static public long getStartOfDay(String fromDay) throws ParseException
+    static public long getStartOfDayUTC(String fromDay) throws ParseException
     {        
         SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyyMMdd" );
         dateFormat.parse(fromDay);
-        return dateFormat.getCalendar().getTime().getTime();
+        return dateFormat.getCalendar().getTimeInMillis()/1000;
     }
-    static public long getEndOfDay(String endDay) throws ParseException
+    static public long getEndOfDayUTC(String endDay) throws ParseException
     {        
         SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyyMMddhhmmss" );
         dateFormat.parse(endDay + "235959");
-        return dateFormat.getCalendar().getTime().getTime();
+        return dateFormat.getCalendar().getTimeInMillis()/1000;
     }
 }

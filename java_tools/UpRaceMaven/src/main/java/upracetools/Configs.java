@@ -10,13 +10,13 @@ package upracetools;
  * @author nice
  */
 public class Configs {
-    public static final boolean isLive = false;
+    public static final boolean isLive = true;
     
     public static String getServerUpRace()
     {
         if(isLive)
-            return "http://uprace.vn";
+            return "https://uprace.vn";
         else
-            return "http://dev.uprace.vn";
+            return "https://dev.uprace.vn";
     }
 }

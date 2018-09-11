@@ -1,4 +1,3 @@
-
 package upracetools.data.strava.subcription;
 
 import java.util.HashMap;
@@ -6,69 +5,60 @@ import java.util.Map;
 
 public class SubscriptionRequest {
 
-    private String aspectType;
-    private Integer eventTime;
-    private Integer objectId;
-    private String objectType;
-    private Integer ownerId;
-    private Integer subscriptionId;
-    private Updates updates;
+    private String aspect_type;
+    private Integer event_time;
+    private Integer object_id;
+    private String object_type;
+    private String owner_id;
+    private String subscription_id;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    public String getAspectType() {
-        return aspectType;
+    public String getAspect_type() {
+        return aspect_type;
     }
 
-    public void setAspectType(String aspectType) {
-        this.aspectType = aspectType;
+    public void setAspect_type(String aspect_type) {
+        this.aspect_type = aspect_type;
     }
 
-    public Integer getEventTime() {
-        return eventTime;
+    public Integer getEvent_time() {
+        return event_time;
     }
 
-    public void setEventTime(Integer eventTime) {
-        this.eventTime = eventTime;
+    public void setEvent_time(Integer event_time) {
+        this.event_time = event_time;
     }
 
-    public Integer getObjectId() {
-        return objectId;
+    public Integer getObject_id() {
+        return object_id;
     }
 
-    public void setObjectId(Integer objectId) {
-        this.objectId = objectId;
+    public void setObject_id(Integer object_id) {
+        this.object_id = object_id;
     }
 
-    public String getObjectType() {
-        return objectType;
+    public String getObject_type() {
+        return object_type;
     }
 
-    public void setObjectType(String objectType) {
-        this.objectType = objectType;
+    public void setObject_type(String object_type) {
+        this.object_type = object_type;
     }
 
-    public Integer getOwnerId() {
-        return ownerId;
+    public String getOwner_id() {
+        return owner_id;
     }
 
-    public void setOwnerId(Integer ownerId) {
-        this.ownerId = ownerId;
+    public void setOwner_id(String owner_id) {
+        this.owner_id = owner_id;
     }
 
-    public Integer getSubscriptionId() {
-        return subscriptionId;
+    public String getSubscription_id() {
+        return subscription_id;
     }
 
-    public void setSubscriptionId(Integer subscriptionId) {
-        this.subscriptionId = subscriptionId;
-    }
-
-    public Updates getUpdates() {
-        return updates;
-    }
-
-    public void setUpdates(Updates updates) {
-        this.updates = updates;
+    public void setSubscription_id(String subscription_id) {
+        this.subscription_id = subscription_id;
     }
 
     public Map<String, Object> getAdditionalProperties() {

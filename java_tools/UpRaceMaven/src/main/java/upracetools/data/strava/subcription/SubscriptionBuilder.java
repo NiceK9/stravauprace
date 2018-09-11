@@ -10,15 +10,15 @@ package upracetools.data.strava.subcription;
  * @author nice
  */
 public class SubscriptionBuilder {
-    static SubscriptionRequest build(int event_time_utc, int owner_id, int activity_id)
+    public static SubscriptionRequest build(long event_time_utc, int owner_id, int activity_id)
     {
         SubscriptionRequest sub = new SubscriptionRequest();
-        sub.setAspectType("update");
-        sub.setObjectType("activity");
-        sub.setSubscriptionId((int)(Math.random() * Integer.MAX_VALUE));
-        sub.setOwnerId(owner_id);
-        sub.setObjectId(activity_id);
-        sub.setEventTime(event_time_utc);
+        sub.setAspect_type("create");
+        sub.setObject_type("activity");
+        sub.setSubscription_id((int)(Math.random() * Integer.MAX_VALUE) + "");
+        sub.setOwner_id(owner_id + "");
+        sub.setObject_id(activity_id);
+        sub.setEvent_time((int)event_time_utc);
         
         return sub;
     }

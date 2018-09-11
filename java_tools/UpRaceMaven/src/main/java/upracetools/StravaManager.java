@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import upracetools.data.Activity;
+import upracetools.data.Profile;
 import upracetools.data.UserProfileRespone;
 
 /**
@@ -18,7 +19,7 @@ import upracetools.data.UserProfileRespone;
  */
 public class StravaManager {
     
-    public static String getUserTokenBy(String user_id, String open_id, int open_type) throws Exception, IOException {
+    public static Profile getUserTokenBy(String user_id, String open_id, int open_type) throws Exception, IOException {
         String url = String.format("https://uprace.vn/api/user/profile?user_id=%s&open_type=%s&open_id=%s", user_id, open_type, open_id) ;
         String result = NetworkUltility.sendGet(url, "");
         
@@ -31,11 +32,11 @@ public class StravaManager {
         UserProfileRespone userProfileRespone = mapper.readValue(result, UserProfileRespone.class);
         
         
-        return userProfileRespone.getProfile().getUserConnect().getAccessToken();
+        return userProfileRespone.getProfile();
     }  
     
-    public static List<Integer> getListActivityOfUser(String token, long start_time, long end_time) throws Exception, IOException {
-        String url = String.format("https://www.strava.com/api/v3/athlete/activities?after=%s&page=0", start_time + "") ;
+    public static List<Activity> getListActivityOfUser(String token, long start_time, long end_time) throws Exception, IOException {
+        String url = String.format("https://www.strava.com/api/v3/athlete/activities?after=%d&before=%d", start_time, end_time) ;
         String result = NetworkUltility.sendGet(url, token);
         
         //print result
@@ -48,14 +49,22 @@ public class StravaManager {
         //JSON from String to Object
         List<Activity> lstActivity = mapper.readValue(result, mapper.getTypeFactory().constructCollectionType(List.class, Activity.class));
         
-        for(Activity activity : lstActivity)
-        {
-            int id = activity.getId();
-            
-            System.out.println("id: " + id);
-            lstActivityId.add(id);
-        }
+//        for(Activity activity : lstActivity)
+//        {
+//            int id = activity.getId();
+//            
+//            System.out.println("id: " + id);
+//            lstActivityId.add(id);
+//        }
         
-        return lstActivityId;
+        return lstActivity;
+    } 
+    
+    public static void getActivityOfUser(String token, String act_id) throws Exception, IOException {
+        String url = String.format("https://www.strava.com/api/v3/activities/%s", act_id) ;
+        String result = NetworkUltility.sendGet(url, token);
+        
+        //print result
+        System.out.println(result);
     } 
 }

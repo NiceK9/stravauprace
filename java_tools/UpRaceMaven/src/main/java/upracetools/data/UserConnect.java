@@ -11,7 +11,9 @@ public class UserConnect {
     private Integer type;
     private String accessToken;
     private String lastLogin;
-    private Boolean isActive;
+    private Boolean isActive; 
+    private String email;
+
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public Integer getUserId() {
@@ -22,6 +24,13 @@ public class UserConnect {
         this.userId = userId;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
     public String getOpenId() {
         return openId;
     }

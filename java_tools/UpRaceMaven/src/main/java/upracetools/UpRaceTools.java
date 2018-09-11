@@ -17,37 +17,64 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import javafx.application.Application;
+import static javafx.application.Application.launch;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import upracetools.NetworkUltility;
+import upracetools.data.Activity;
+import upracetools.data.Profile;
 import upracetools.data.UserProfileRespone;
+import upracetools.data.strava.subcription.SubscriptionBuilder;
+import upracetools.data.strava.subcription.SubscriptionRequest;
 
 /**
  *
  * @author nice
  */
-public class UpRaceTools {
+public class UpRaceTools extends Application {
 
+    @Override
+    public void start(Stage stage) throws Exception {
+        URL url = getClass().getResource("/FXMLDocument.fxml");
+        Parent root = FXMLLoader.load(url);
+
+        Scene scene = new Scene(root);
+
+        stage.setScene(scene);
+        stage.show();
+    }
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         // TODO code application logic here
         
-        new UpRaceTools();
-    }
+        launch(args);
+//        new UpRaceTools();
+    }  
+    
+    public class JavaFXApplication1 extends Application {
 
-    public UpRaceTools() {
-        try{
-            long start_time = DateTimeUtils.getStartOfDay("20180901");
-            long end_time = DateTimeUtils.getEndOfDay("20180906");
+        @Override
+        public void start(Stage stage) throws Exception {
+            Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
 
-            System.out.println();
-            List<Integer> activity_ids = StravaManager.getListActivityOfUser(StravaManager.getUserTokenBy("41", "", OpenSocial.STRAVA), start_time, end_time);
-            
-            
-        }catch(Exception e)
-        {
-            e.printStackTrace();
+            Scene scene = new Scene(root);
+
+            stage.setScene(scene);
+            stage.show();
         }
-    }    
+
+//        /**
+//         * @param args the command line arguments
+//         */
+//        public static void main(String[] args) {
+//            launch(args);
+//        }
+
+    }
 
 }
